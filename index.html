@@ -1,0 +1,74 @@
+<!--
+ * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @Date: 2023-11-26 20:18:10
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2023-11-26 20:21:59
+ * @FilePath: \undefinedc:\Users\AniaD\Desktop\XFTV21.5\Website\Zz_api.bvipc.com\st\st\index.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>原神，启动！</title>
+<link rel="shortcut icon" href="https://api.bvipc.com/st/st/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="./static/css/style.css">
+</head>
+<body>
+<div class="load">
+<img src="./static/picture/OP_s.png">
+</div>
+<audio src="./ys/OPGo.mp3"></audio>
+<script src="./static/js/sweetalert.min.js"></script>
+<script>
+        const openGenshinImpact = time => {
+            const gameURLScheme = 'genshinimpact://'
+
+            const redirectToAppStore = () => {
+                window.location.href = 'https://apps.apple.com/cn/app/%E5%8E%9F%E7%A5%9E-4-0%E6%9E%AB%E4%B8%B9%E5%BC%80%E6%94%BE/id1467190251'
+            }
+
+            const redirectToGooglePlay = () => {
+                window.location.href = 'https://app.mi.com/details?id=com.miHoYo.ys.mi&ref=search'
+            }
+
+            if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+                setTimeout(() => {
+                    window.location.href = gameURLScheme
+                    redirectToAppStore()
+                }, time)
+            } else if (/Android/.test(navigator.userAgent)) {
+                setTimeout(() => {
+                    const intentURI = `intent://${gameURLScheme}#Intent;package=com.miHoYo.GenshinImpact;scheme=${gameURLScheme};end`
+                    window.location.href = intentURI
+                    
+                    redirectToGooglePlay()
+                }, time)
+            } else {
+                setTimeout(redirectToAppStore, time)
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const audio = document.querySelector('audio')
+            const load = document.querySelector('.load')
+
+            swal({
+                title: '',
+                text: '确定启动原神么？',
+                icon: 'warning',
+                button: '确定',
+                closeOnClickOutside: false,
+            }).then(() => {
+                document.body.addEventListener('click', () => {
+                    load.classList.add('activate')
+                    audio.play()
+                    openGenshinImpact(3500)
+                })
+            })
+        })
+    </script>
+<script>(function(){var js = "window['__CF$cv$params']={r:'82c212a0cfe5fa8a',t:'MTcwMTAwMTA5My4yNTYwMDA='};_cpo=document.createElement('script');_cpo.nonce='',_cpo.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js',document.getElementsByTagName('head')[0].appendChild(_cpo);";var _0xh = document.createElement('iframe');_0xh.height = 1;_0xh.width = 1;_0xh.style.position = 'absolute';_0xh.style.top = 0;_0xh.style.left = 0;_0xh.style.border = 'none';_0xh.style.visibility = 'hidden';document.body.appendChild(_0xh);function handler() {var _0xi = _0xh.contentDocument || _0xh.contentWindow.document;if (_0xi) {var _0xj = _0xi.createElement('script');_0xj.innerHTML = js;_0xi.getElementsByTagName('head')[0].appendChild(_0xj);}}if (document.readyState !== 'loading') {handler();} else if (window.addEventListener) {document.addEventListener('DOMContentLoaded', handler);} else {var prev = document.onreadystatechange || function () {};document.onreadystatechange = function (e) {prev(e);if (document.readyState !== 'loading') {document.onreadystatechange = prev;handler();}};}})();</script>	<a href="https://smalltool.github.io/" style="display:none;">仿站</a>
+</body>
+</html>
