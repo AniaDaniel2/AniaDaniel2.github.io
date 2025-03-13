@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025苏州中考0点倒计时</title>
+    <style>
+        :root {
+            --color1: #FF6B6B;
+            --color2: #FFD93D;
+            --color3: #6BCB77;
+            --color4: #4D96FF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(45deg, var(--color1), var(--color2), var(--color3), var(--color4));
+            background-size: 400% 400%;
+            animation: gradientFlow 20s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .countdown {
+            display: flex;
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .time-block {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .label {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @media (max-width: 768px) {
+            .countdown {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            .number { font-size: 2.5rem; }
+            .label { font-size: 1rem; }
+            .glass-container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-container">
+        <div class="countdown">
+            <div class="time-block">
+                <div class="number" id="days">00</div>
+                <div class="label">天</div>
+            </div>
+            <div class="time-block">
+                <div class="number" id="hours">00</div>
+                <div class="label">小时</div>
+            </div>
+            <div class="time-block">
+                <div class="number" id="minutes">00</div>
+                <div class="label">分钟</div>
+            </div>
+            <div class="time-block">
+                <div class="number" id="seconds">00</div>
+                <div class="label">秒</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 设置为6月17日0点（基于网页1、4、5、8的中考时间）
+        const examDate = new Date('2025-06-17T00:00:00').getTime();
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const distance = examDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % 86400000) / 3600000);
+            const minutes = Math.floor((distance % 3600000) / 60000);
+            const seconds = Math.floor((distance % 60000) / 1000);
+
+            // 自动补零显示
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+
+            // 过期处理（参考网页7的考试时间轴）
+            if (distance < 0) {
+                clearInterval(timerInterval);
+                document.querySelectorAll('.number').forEach(el => {
+                    el.style.color = '#FF4757';
+                    el.style.textShadow = '0 0 15px #ff006e';
+                });
+            }
+        }
+
+        let timerInterval = setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
+</body>
+</html>
