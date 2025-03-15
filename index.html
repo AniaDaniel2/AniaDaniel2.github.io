@@ -76,7 +76,7 @@
             opacity: 0.95;
         }
 
-        .ip-info {
+        .info-bar {
             position: fixed;
             bottom: 20px;
             left: 50%;
@@ -105,6 +105,9 @@
             padding: 10px;
             font-size: 0.9em;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
         }
 
         footer a {
@@ -136,7 +139,7 @@
             }
             .number { font-size: 2.5rem; }
             .label { font-size: 1rem; }
-            .ip-info {
+            .info-bar {
                 font-size: 0.8em;
                 padding: 8px 16px;
                 bottom: 10px;
@@ -147,6 +150,8 @@
             footer {
                 bottom: 60px;
                 font-size: 0.8em;
+                flex-direction: column;
+                gap: 8px;
             }
         }
     </style>
@@ -173,18 +178,15 @@
         </div>
     </div>
 
-    <footer>
-        <p>
-            <a href="https://github.com/AniaDaniel2" target="_blank">AniaDaniel2</a> 2024-2025 
-            感谢
-            <a href="https://www.deepseek.com/" target="_blank">DeepSeek</a>技术支持
-        </p>
-    </footer>
-
-    <div class="ip-info" id="ipInfo">
+    <div class="info-bar" id="ipInfo">
         <span>IP：加载中...</span>
         <span>位置：获取中...</span>
     </div>
+
+    <footer>
+        <a href="https://github.com/AniaDaniel2" target="_blank">AniaDaniel2 2024-2025</a>
+        <a href="https://www.deepseek.com/" target="_blank">感谢 DeepSeek 技术支持</a>
+    </footer>
 
     <script>
         const examDate = new Date('2025-06-17T00:00:00').getTime();
