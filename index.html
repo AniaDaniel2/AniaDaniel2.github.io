@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>2025苏州中考倒计时</title>
     <style>
         :root {
@@ -41,6 +41,7 @@
             align-items: center;
             font-family: 'Segoe UI', sans-serif;
             position: relative;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .glass-container {
@@ -48,32 +49,41 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-radius: 20px;
-            padding: 2rem;
+            padding: 1.5rem;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            margin-bottom: 80px;
+            margin: 1rem;
+            margin-bottom: 100px;
+            width: calc(100% - 2rem);
+            max-width: 600px;
         }
 
         .countdown {
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
             text-align: center;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .time-block {
             color: var(--text-color);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            flex: 1 1 20%;
+            min-width: 80px;
         }
 
         .number {
-            font-size: 3.5rem;
+            font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
+            letter-spacing: 1px;
         }
 
         .label {
-            font-size: 1.2rem;
+            font-size: 0.9rem;
             opacity: 0.95;
+            letter-spacing: 0.5px;
         }
 
         .info-bar {
@@ -84,16 +94,18 @@
             background: var(--glass-bg);
             backdrop-filter: blur(8px);
             border-radius: 15px;
-            padding: 12px 24px;
+            padding: 8px 16px;
             color: var(--text-color);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-            font-size: 0.9em;
+            font-size: 0.8em;
             display: flex;
-            gap: 15px;
+            gap: 10px;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            opacity: 0.95;
-            transition: opacity 0.3s ease;
+            max-width: 90%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         footer {
@@ -103,11 +115,11 @@
             text-align: center;
             color: var(--text-color);
             padding: 10px;
-            font-size: 0.9em;
+            font-size: 0.8em;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
             display: flex;
-            justify-content: center;
-            gap: 20px;
+            flex-direction: column;
+            gap: 8px;
         }
 
         footer a {
@@ -115,10 +127,7 @@
             text-decoration: none;
             border-bottom: 1px solid rgba(255, 255, 255, 0.3);
             transition: border-color 0.3s ease;
-        }
-
-        footer a:hover {
-            border-color: var(--text-color);
+            padding-bottom: 2px;
         }
 
         @keyframes gradientFlow {
@@ -127,31 +136,26 @@
             100% { background-position: 0% 50%; }
         }
 
-        @media (max-width: 768px) {
+        @media (min-width: 480px) {
             .glass-container {
-                padding: 1.5rem;
-                margin: 1rem;
-                margin-bottom: 100px;
+                padding: 2rem;
             }
-            .countdown {
-                flex-direction: column;
-                gap: 1.5rem;
+            .number {
+                font-size: 3.5rem;
             }
-            .number { font-size: 2.5rem; }
-            .label { font-size: 1rem; }
+            .label {
+                font-size: 1.1rem;
+            }
             .info-bar {
-                font-size: 0.8em;
-                padding: 8px 16px;
-                bottom: 10px;
-                gap: 8px;
-                flex-direction: column;
-                text-align: center;
+                flex-direction: row;
+                font-size: 0.9em;
+                padding: 12px 24px;
             }
             footer {
-                bottom: 60px;
-                font-size: 0.8em;
-                flex-direction: column;
-                gap: 8px;
+                flex-direction: row;
+                justify-content: center;
+                gap: 20px;
+                font-size: 0.9em;
             }
         }
     </style>
@@ -192,10 +196,18 @@
         const examDate = new Date('2025-06-17T00:00:00').getTime();
 
         function updateTimer() {
-            const now = new Date().getTime();
+            const now = Date.now();
             const distance = examDate - now;
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            if (distance < 0) {
+                document.querySelectorAll('.number').forEach(el => {
+                    el.style.color = '#FF4757';
+                    el.style.textShadow = '0 0 15px #ff006e';
+                });
+                return clearInterval(timerInterval);
+            }
+
+            const days = Math.floor(distance / 86400000);
             const hours = Math.floor((distance % 86400000) / 3600000);
             const minutes = Math.floor((distance % 3600000) / 60000);
             const seconds = Math.floor((distance % 60000) / 1000);
@@ -204,34 +216,41 @@
             document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
             document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
             document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-
-            if (distance < 0) {
-                clearInterval(timerInterval);
-                document.querySelectorAll('.number').forEach(el => {
-                    el.style.color = '#FF4757';
-                    el.style.textShadow = '0 0 15px #ff006e';
-                });
-            }
         }
 
         async function fetchIPInfo() {
             try {
-                const response = await fetch('https://ipapi.co/json/');
+                const response = await fetch('https://ipapi.co/json/', {
+                    headers: { 'Accept': 'application/json' }
+                });
+                
+                if (!response.ok) throw new Error('网络响应异常');
+                
                 const data = await response.json();
+                const location = [data.city, data.region, data.country_name]
+                    .filter(Boolean).join(' · ');
                 
                 document.getElementById('ipInfo').innerHTML = `
                     <span>IP：${data.ip}</span>
-                    <span>位置：${data.city} · ${data.region} · ${data.country_name}</span>
+                    <span>位置：${location || '未知'}</span>
                 `;
             } catch (error) {
-                console.error('IP信息获取失败:', error);
-                document.getElementById('ipInfo').style.display = 'none';
+                console.warn('IP信息获取失败:', error);
+                document.getElementById('ipInfo').innerHTML = `
+                    <span>IP：获取失败</span>
+                    <span>位置：服务不可用</span>
+                `;
             }
         }
 
-        let timerInterval = setInterval(updateTimer, 1000);
+        const timerInterval = setInterval(updateTimer, 1000);
         updateTimer();
         fetchIPInfo();
+
+        // 移动端触摸事件处理
+        document.body.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+        }, { passive: false });
     </script>
 </body>
 </html>
