@@ -6,13 +6,9 @@
     <title>2025苏州中考倒计时</title>
     <style>
         :root {
-            --color1: #FF0000;
-            --color2: #FF7F00;
-            --color3: #FFFF00;
-            --color4: #00FF00;
-            --color5: #00FFFF;
-            --color6: #0000FF;
-            --color7: #8B00FF;
+            --liquid-primary: #7f5af0;
+            --liquid-secondary: #2cb67d;
+            --text-color: #333;
         }
 
         * {
@@ -23,39 +19,102 @@
 
         body {
             min-height: 100vh;
-            background: linear-gradient(45deg, 
-                var(--color1),
-                var(--color2),
-                var(--color3),
-                var(--color4),
-                var(--color5),
-                var(--color6),
-                var(--color7));
-            background-size: 600% 600%;
-            animation: gradientFlow 20s ease infinite;
-            display: flex;
-            flex-direction: column; /* 新增 */
-            justify-content: center;
-            align-items: center;
+            background: linear-gradient(45deg,
+                var(--liquid-primary),
+                var(--liquid-secondary),
+                var(--liquid-primary));
+            overflow: hidden;
             font-family: 'Segoe UI', sans-serif;
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* 新增页脚样式 */
+        /* 液体背景动画 */
+        .liquid-bg {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                90deg,
+                rgba(255,255,255,0.1) 25%,
+                rgba(255,255,255,0.3) 50%,
+                rgba(255,255,255,0.1) 75%
+            );
+            animation: liquidFlow 15s infinite linear;
+            transform: rotate(30deg);
+            opacity: 0.4;
+            z-index: 0;
+        }
+
+        @keyframes liquidFlow {
+            0% { transform: translateY(0%) rotate(30deg); }
+            100% { transform: translateY(-50%) rotate(30deg); }
+        }
+
+        /* 主内容容器 */
+        .glass-container {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 倒计时样式 */
+        .countdown {
+            display: flex;
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .time-block {
+            color: var(--text-color);
+        }
+
+        .number {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .label {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* IP信息栏 */
+        .ip-info {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 12px 24px;
+            color: var(--text-color);
+            font-size: 0.9em;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+
+        /* 页脚样式 */
         footer {
             width: 100%;
             text-align: center;
             padding: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            margin-top: auto; /* 确保页脚在底部 */
-            font-family: Arial, sans-serif;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(8px);
-            color: white;
+            background: rgba(255, 255, 255, 0.9);
+            margin-top: auto;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            z-index: 2;
         }
 
         footer a {
-            color: #8ab4f8 !important; /* 适配深色背景 */
+            color: #1a73e8 !important;
             text-decoration: none;
             transition: opacity 0.3s;
         }
@@ -65,24 +124,42 @@
             opacity: 0.8;
         }
 
-        .glass-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin: 20px; /* 增加外边距 */
+        @media (max-width: 768px) {
+            .glass-container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            
+            .countdown {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .number {
+                font-size: 2.5rem;
+            }
+            
+            .ip-info {
+                bottom: 60px;
+                right: 10px;
+                font-size: 0.8em;
+                padding: 8px 16px;
+            }
+            
+            footer {
+                padding: 15px;
+                font-size: 0.9em;
+            }
         }
-
-        /* 其他原有样式保持不变... */
     </style>
 </head>
 <body>
+    <!-- 液体背景 -->
+    <div class="liquid-bg"></div>
+
+    <!-- 主内容 -->
     <div class="glass-container">
         <div class="countdown">
-            <!-- 倒计时结构保持不变 -->
             <div class="time-block">
                 <div class="number" id="days">00</div>
                 <div class="label">天</div>
@@ -91,7 +168,7 @@
                 <div class="number" id="hours">00</div>
                 <div class="label">小时</div>
             </div>
-            <div class="time-block">
+            <div class="time-container">
                 <div class="number" id="minutes">00</div>
                 <div class="label">分钟</div>
             </div>
@@ -102,13 +179,13 @@
         </div>
     </div>
 
-    <!-- IP信息栏 -->
+    <!-- IP信息 -->
     <div class="ip-info" id="ipInfo">
         <span>IP：加载中...</span>
         <span>位置：获取中...</span>
     </div>
 
-    <!-- 新增页脚 -->
+    <!-- 页脚 -->
     <footer>
         <p>
             <a href="https://github.com/AniaDaniel2" target="_blank" rel="noopener noreferrer">AniaDaniel2</a> 2024-2025 
@@ -118,7 +195,64 @@
     </footer>
 
     <script>
-        // 原有脚本保持不变...
+        // 液体背景初始化
+        function createLiquidEffect() {
+            const container = document.body;
+            for(let i = 0; i < 3; i++) {
+                const liquid = document.createElement('div');
+                liquid.className = 'liquid-bg';
+                liquid.style.animationDelay = `${i * 3}s`;
+                liquid.style.opacity = `${0.3 + i * 0.1}`;
+                container.prepend(liquid);
+            }
+        }
+
+        // 倒计时逻辑
+        const examDate = new Date('2025-06-17T00:00:00').getTime();
+        
+        function updateTimer() {
+            const now = new Date().getTime();
+            const distance = examDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % 86400000) / 3600000);
+            const minutes = Math.floor((distance % 3600000) / 60000);
+            const seconds = Math.floor((distance % 60000) / 1000);
+
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+
+            if (distance < 0) {
+                clearInterval(timerInterval);
+                document.querySelectorAll('.number').forEach(el => {
+                    el.style.color = '#e74c3c';
+                    el.style.textShadow = '0 0 15px rgba(231, 76, 60, 0.5)';
+                });
+            }
+        }
+
+        // IP获取逻辑
+        async function fetchIPInfo() {
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+                
+                document.getElementById('ipInfo').innerHTML = `
+                    <span>IP：${data.ip}</span>
+                    <span>位置：${data.city} · ${data.region} · ${data.country_name}</span>
+                `;
+            } catch (error) {
+                document.getElementById('ipInfo').style.display = 'none';
+            }
+        }
+
+        // 初始化
+        createLiquidEffect();
+        let timerInterval = setInterval(updateTimer, 1000);
+        updateTimer();
+        fetchIPInfo();
     </script>
 </body>
 </html>
