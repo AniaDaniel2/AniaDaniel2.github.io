@@ -40,10 +40,12 @@
                 rgba(255,255,255,0.3) 50%,
                 rgba(255,255,255,0.1) 75%
             );
-            animation: liquidFlow 15s infinite linear;
+            animation: liquidFlow 25s infinite linear;
             transform: rotate(30deg);
             opacity: 0.4;
             z-index: 0;
+            will-change: transform;
+            backface-visibility: hidden;
         }
 
         @keyframes liquidFlow {
@@ -53,6 +55,7 @@
 
         .glass-container {
             background: rgba(255, 255, 255, 0.85);
+            -webkit-backdrop-filter: blur(12px);
             backdrop-filter: blur(12px);
             border-radius: 20px;
             padding: 2rem;
@@ -65,6 +68,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: opacity 0.3s;
         }
 
         .countdown {
@@ -153,13 +157,11 @@
                 gap: 0.5rem;
             }
 
-            .number {
-                font-size: 2.5rem;
-            }
-
             .ip-info {
-                position: static;
-                margin: 10px auto;
+                position: fixed;
+                bottom: 5px;
+                left: 50%;
+                transform: translateX(-50%);
                 width: 90%;
                 text-align: center;
             }
@@ -197,52 +199,54 @@
 
     <footer>
         <p>
-            <a href="https://github.com/AniaDaniel2" target="_blank">AniaDaniel2</a> 2024-2025 
+            <a href="https://github.com/AniaDaniel2" target="_blank" rel="noopener noreferrer">AniaDaniel2</a> 2024-2025
             感谢
-            <a href="https://www.deepseek.com/" target="_blank">DeepSeek</a>技术支持
+            <a href="https://www.deepseek.com/" target="_blank" rel="noopener noreferrer">DeepSeek</a>技术支持
         </p>
     </footer>
 
     <script>
-        // 优化后的液体背景初始化
+        // 三层液体背景初始化
         function createLiquidEffect() {
             const container = document.body;
-            for(let i = 0; i < 2; i++) {
+            for(let i = 0; i < 3; i++) {
                 const liquid = document.createElement('div');
                 liquid.className = 'liquid-bg';
-                liquid.style.animation = `liquidFlow ${15 + i*5}s linear infinite`;
-                liquid.style.opacity = 0.3 + i*0.15;
+                liquid.style.animation = `liquidFlow ${25 + i*5}s linear infinite`;
+                liquid.style.opacity = 0.3 + i*0.1;
                 container.prepend(liquid);
             }
         }
 
-        // 倒计时逻辑
+        // 精确倒计时计算
         const examDate = new Date('2025-06-17T00:00:00').getTime();
-        
+        let timerInterval;
+
         function updateTimer() {
             const now = Date.now();
             const distance = examDate - now;
 
-            const days = Math.floor(distance / (864e5));
-            const hours = Math.floor((distance % 864e5) / 36e5);
-            const minutes = Math.floor((distance % 36e5) / 6e4);
-            const seconds = Math.floor((distance % 6e4) / 1e3);
-
-            document.getElementById('days').textContent = days.toString().padStart(2, '0');
-            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-
-            if (distance < 0) {
+            if(distance < 0) {
                 clearInterval(timerInterval);
                 document.querySelectorAll('.number').forEach(el => {
                     el.style.color = '#e74c3c';
                     el.style.textShadow = '0 0 15px rgba(231, 76, 60, 0.5)';
                 });
+                return;
             }
+
+            const days = Math.floor(distance / 864e5);
+            const hours = Math.floor((distance % 864e5) / 36e5);
+            const minutes = Math.floor((distance % 36e5) / 6e4);
+            const seconds = Math.floor((distance % 6e4) / 1e3);
+
+            document.getElementById('days').textContent = String(days).padStart(2,'0');
+            document.getElementById('hours').textContent = String(hours).padStart(2,'0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2,'0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2,'0');
         }
 
-        // IP信息获取
+        // 增强版IP获取
         async function fetchIPInfo() {
             try {
                 const response = await fetch('https://ipapi.co/json/');
@@ -254,7 +258,13 @@
                     <span>位置：${data.city} · ${data.region} · ${data.country_name}</span>
                 `;
             } catch {
-                document.getElementById('ipInfo').style.display = 'none';
+                try {
+                    const fallback = await fetch('https://api.ipify.org?format=json');
+                    const data = await fallback.json();
+                    document.getElementById('ipInfo').innerHTML = `<span>IP：${data.ip}</span>`;
+                } catch {
+                    document.getElementById('ipInfo').style.display = 'none';
+                }
             }
         }
 
@@ -263,7 +273,12 @@
             createLiquidEffect();
             updateTimer();
             fetchIPInfo();
-            setInterval(updateTimer, 1000);
+            timerInterval = setInterval(updateTimer, 1000);
+        });
+
+        // 内存管理
+        window.addEventListener('beforeunload', () => {
+            clearInterval(timerInterval);
         });
     </script>
 </body>
