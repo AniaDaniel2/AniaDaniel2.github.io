@@ -2,25 +2,30 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
     <title>2025苏州中考倒计时</title>
     <style>
         :root {
-            --color1: #FF0000;
-            --color2: #FF7F00;
-            --color3: #FFFF00;
-            --color4: #00FF00;
-            --color5: #00FFFF;
-            --color6: #0000FF;
-            --color7: #8B00FF;
+            --color1: #FF4040;
+            --color2: #FF9040;
+            --color3: #FFFF40;
+            --color4: #40FF40;
+            --color5: #40FFFF;
+            --color6: #4040FF;
+            --color7: #A040FF;
             --text-color: rgba(255, 255, 255, 0.95);
-            --glass-bg: rgba(0, 0, 0, 0.25);
+            --glass-bg: rgba(0, 0, 0, 0.3);
+        }
+
+        html {
+            font-size: calc(12px + 0.3vw);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -39,28 +44,28 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
             position: relative;
-            -webkit-tap-highlight-color: transparent;
         }
 
         .glass-container {
             background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px) saturate(120%);
+            -webkit-backdrop-filter: blur(12px) saturate(120%);
             border-radius: 20px;
-            padding: 1.5rem;
+            padding: 2rem;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.15);
             margin: 1rem;
             margin-bottom: 100px;
-            width: calc(100% - 2rem);
-            max-width: 600px;
+            width: 90%;
+            max-width: 800px;
+            will-change: transform;
         }
 
         .countdown {
             display: flex;
-            gap: 1.5rem;
+            gap: clamp(1rem, 3vw, 2rem);
             text-align: center;
             flex-wrap: wrap;
             justify-content: center;
@@ -69,15 +74,17 @@
         .time-block {
             color: var(--text-color);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            flex: 1 1 20%;
-            min-width: 80px;
+            flex: 1 1 22%;
+            min-width: 5.5rem;
+            transition: transform 0.2s ease;
         }
 
         .number {
-            font-size: clamp(2rem, 8vw, 4rem);
+            font-size: clamp(2.2rem, 8vw, 4.5rem);
             font-weight: 700;
             margin-bottom: 0.3rem;
             letter-spacing: 1px;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         .label {
@@ -136,20 +143,39 @@
             100% { background-position: 0% 50%; }
         }
 
-        @media (min-width: 480px) {
+        @media (max-width: 480px) {
             .glass-container {
-                padding: 2rem;
+                padding: 1.2rem;
+                margin-bottom: 80px;
             }
+            
+            .countdown {
+                gap: 0.8rem;
+            }
+            
+            .time-block {
+                min-width: 4.8rem;
+            }
+            
             .info-bar {
-                flex-direction: row;
-                font-size: 0.9em;
-                padding: 12px 24px;
+                bottom: 10px;
+                font-size: 0.75em;
+                padding: 6px 12px;
             }
+            
             footer {
-                flex-direction: row;
-                justify-content: center;
-                gap: 20px;
-                font-size: 0.9em;
+                bottom: 55px;
+                font-size: 0.7em;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            .glass-container {
+                max-width: 90%;
+            }
+            
+            .number {
+                font-size: 3.8rem;
             }
         }
     </style>
@@ -189,6 +215,7 @@
     <script>
         const examDate = new Date('2025-06-17T00:00:00').getTime();
 
+        // 时间更新函数
         function updateTimer() {
             const now = Date.now();
             const distance = examDate - now;
@@ -212,6 +239,7 @@
             document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
         }
 
+        // IP信息获取
         async function fetchIPInfo() {
             try {
                 const response = await fetch('https://ipapi.co/json/', {
@@ -237,13 +265,32 @@
             }
         }
 
+        // 设备适配
+        function adaptLayout() {
+            const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+            document.body.classList.toggle('mobile', isMobile);
+            
+            if(isMobile) {
+                document.documentElement.style.setProperty('--glass-bg', 'rgba(0, 0, 0, 0.4)');
+            }
+        }
+
+        // 初始化
         const timerInterval = setInterval(updateTimer, 1000);
         updateTimer();
         fetchIPInfo();
+        adaptLayout();
+        window.addEventListener('resize', adaptLayout);
 
-        document.body.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-        }, { passive: false });
+        // 移动端点击效果
+        document.querySelectorAll('.time-block').forEach(block => {
+            block.addEventListener('click', () => {
+                block.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    block.style.transform = '';
+                }, 200);
+            });
+        });
     </script>
 </body>
 </html>
