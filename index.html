@@ -59,40 +59,33 @@
             margin: 1rem;
             width: calc(100% - 2rem);
             max-width: 680px;
-            will-change: transform;
         }
 
         .countdown {
             display: flex;
             gap: clamp(0.8rem, 2.5vw, 1.6rem);
             text-align: center;
+            justify-content: space-around;
             flex-wrap: nowrap;
-            justify-content: space-evenly;
         }
 
         .time-block {
             color: var(--text-color);
             text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.35);
-            flex: 1 1 auto;
+            flex: 1;
             min-width: 5.2rem;
-            max-width: 7.5rem;
             padding: 0.4rem;
-            transition: transform 0.2s ease;
         }
 
         .number {
             font-size: clamp(2.4rem, 8.5vw, 4.2rem);
             font-weight: 700;
             margin-bottom: 0.2rem;
-            letter-spacing: -0.5px;
-            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
             line-height: 1.1;
         }
 
         .label {
             font-size: clamp(0.85rem, 3.2vw, 1rem);
-            opacity: 0.95;
-            letter-spacing: 0.3px;
             white-space: nowrap;
         }
 
@@ -107,11 +100,11 @@
             padding: 8px 18px;
             color: var(--text-color);
             font-size: 0.78em;
-            display: inline-flex;
+            display: flex;
             gap: 1.2rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.15);
             max-width: 96%;
+            overflow-x: auto;
+            white-space: nowrap;
         }
 
         footer {
@@ -123,17 +116,16 @@
             padding: 0 10px;
             font-size: 0.78em;
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
-            gap: 0.8rem 1.2rem;
+            gap: 1.2rem;
+            flex-wrap: wrap;
         }
 
         footer a {
             color: var(--text-color);
             text-decoration: none;
             border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-            transition: opacity 0.3s ease;
-            padding-bottom: 1px;
+            white-space: nowrap;
         }
 
         @keyframes gradientFlow {
@@ -145,45 +137,18 @@
         @media (max-width: 480px) {
             .glass-container {
                 padding: 1.4rem;
-                border-radius: 14px;
                 margin-bottom: 70px;
-            }
-            
-            .time-block {
-                min-width: 4.6rem;
-                padding: 0.2rem;
-            }
-            
-            .number {
-                font-size: 2.6rem;
-                margin-bottom: 0.1rem;
             }
             
             .info-bar {
                 font-size: 0.72em;
-                gap: 0.8rem;
                 padding: 6px 12px;
                 bottom: 12px;
             }
             
             footer {
                 bottom: 50px;
-                gap: 0.6rem;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .glass-container {
-                padding: 2.2rem;
-                border-radius: 22px;
-            }
-            
-            .countdown {
-                gap: 1.8rem;
-            }
-            
-            .number {
-                font-size: 4.5rem;
+                gap: 0.8rem;
             }
         }
     </style>
@@ -223,7 +188,6 @@
     <script>
         const examDate = new Date('2025-06-17T00:00:00').getTime();
 
-        // 优化时间更新
         function updateTimer() {
             const now = Date.now();
             const distance = examDate - now;
@@ -241,30 +205,22 @@
             const minutes = Math.floor((distance % 3600000) / 60000);
             const seconds = Math.floor((distance % 60000) / 1000);
 
-            [days, hours, minutes, seconds].forEach((val, i) => {
-                document.getElementById(['days','hours','minutes','seconds'][i]).textContent = 
-                    val.toString().padStart(2, '0');
-            });
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
         }
 
-        // 优化IP获取
         async function fetchIPInfo() {
             try {
-                const controller = new AbortController();
-                setTimeout(() => controller.abort(), 3000);
-                
-                const res = await fetch('https://ipapi.co/json/', {
-                    signal: controller.signal,
-                    headers: { 'Accept': 'application/json' }
-                });
-                
+                const res = await fetch('https://ipapi.co/json/');
                 const data = await res.json();
-                const loc = [data.city, data.region, data.country_name]
-                    .filter(x => x && x.trim()).join(' · ') || '未知地区';
+                const location = [data.city, data.region, data.country_name]
+                    .filter(x => x).join(' · ') || '未知地区';
                 
                 document.getElementById('ipInfo').innerHTML = `
-                    <span>IP：${data.ip || '未知'}</span>
-                    <span>位置：${loc}</span>
+                    <span>IP：${data.ip}</span>
+                    <span>位置：${location}</span>
                 `;
             } catch (e) {
                 document.getElementById('ipInfo').innerHTML = `
@@ -274,27 +230,9 @@
             }
         }
 
-        // 优化布局适配
-        function adaptLayout() {
-            const isMobile = window.innerWidth <= 768;
-            document.documentElement.style.setProperty('--glass-bg', 
-                isMobile ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.3)');
-        }
-
-        // 初始化
         const timerInterval = setInterval(updateTimer, 1000);
         updateTimer();
         fetchIPInfo();
-        adaptLayout();
-        window.addEventListener('resize', adaptLayout);
-
-        // 添加点击反馈
-        document.querySelectorAll('.time-block').forEach(block => {
-            block.addEventListener('click', () => {
-                block.style.transform = 'scale(0.96)';
-                setTimeout(() => block.style.transform = '', 180);
-            });
-        });
     </script>
 </body>
 </html>
