@@ -7,8 +7,8 @@
     <style>
         :root {
             --primary-color: #2A2A2A;
-            --accent-red: #FF0000;  /* 标准红色 */
-            --accent-blue: #6B8CFF;  /* 新增蓝色 */
+            --accent-red: #FF0000;
+            --accent-blue: #6B8CFF;
             --text-color: #F5F5F5;
             --glass-bg: rgba(42, 42, 42, 0.85);
         }
@@ -72,6 +72,8 @@
             border-radius: 50%;
             margin-bottom: 2rem;
             border: 3px solid var(--accent-blue);
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .projects {
@@ -81,7 +83,6 @@
             gap: 2rem;
         }
 
-        /* 卡片样式 */
         .project-card {
             background: var(--glass-bg);
             padding: 1.5rem;
@@ -94,15 +95,13 @@
             transform: scale(1.02);
         }
 
-        /* 红色项目卡特殊样式 */
         #alist-card {
             border: 2px solid var(--accent-red);
         }
         #alist-card h3 {
-            color: var(--accent-red) !important;
+            color: var(--accent-red);
         }
 
-        /* 蓝色项目卡特殊样式 */
         #countdown-card {
             border: 2px solid var(--accent-blue);
         }
@@ -129,14 +128,13 @@
 
     <div class="container">
         <section class="hero">
-            <img src="https://i2.hdslb.com/bfs/face/180fbd4b783cc997def5816c52ce9e8577b146f8.jpg" 
-                 alt="头像" 
+            <img src="https://avatars.githubusercontent.com/u/130365608?v=4&size=150" 
+                 alt="GitHub头像" 
                  class="avatar">
             <h1>AniaDaniel2</h1>
         </section>
 
         <section class="projects">
-            <!-- 中考倒计时卡片 -->
             <div class="project-card" id="countdown-card" onclick="location.href='zk.html'">
                 <h3>中考倒计时网页</h3>
                 <p class="project-description">
@@ -147,7 +145,6 @@
                 </p>
             </div>
 
-            <!-- Alist项目卡 -->
             <div class="project-card" id="alist-card" onclick="window.open('https://github.com/AniaDaniel2/ipAlistLauncher', '_blank')">
                 <h3>ipAlistLauncher</h3>
                 <p class="project-description">
