@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AniaDaniel2 的主页</title>
+    <style>
+        :root {
+            --primary-color: #2A2A2A;
+            --accent-red: #FF0000;  /* 标准红色 */
+            --accent-blue: #6B8CFF;  /* 新增蓝色 */
+            --text-color: #F5F5F5;
+            --glass-bg: rgba(42, 42, 42, 0.85);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(45deg, 
+                #2A2A2A,
+                #3A3A3A,
+                #4A4A4A);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .hero {
+            margin-top: 8rem;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 2rem;
+            border: 3px solid var(--accent-blue);
+        }
+
+        .projects {
+            margin-top: 4rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        /* 卡片样式 */
+        .project-card {
+            background: var(--glass-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .project-card:hover {
+            transform: scale(1.02);
+        }
+
+        /* 红色项目卡特殊样式 */
+        #alist-card {
+            border: 2px solid var(--accent-red);
+        }
+        #alist-card h3 {
+            color: var(--accent-red) !important;
+        }
+
+        /* 蓝色项目卡特殊样式 */
+        #countdown-card {
+            border: 2px solid var(--accent-blue);
+        }
+
+        .project-description {
+            line-height: 1.8;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="https://github.com/AniaDaniel2">我的项目</a>
+            <a href="zk.html">中考倒计时</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section class="hero">
+            <img src="https://i2.hdslb.com/bfs/face/180fbd4b783cc997def5816c52ce9e8577b146f8.jpg" 
+                 alt="头像" 
+                 class="avatar">
+            <h1>AniaDaniel2</h1>
+        </section>
+
+        <section class="projects">
+            <!-- 中考倒计时卡片 -->
+            <div class="project-card" id="countdown-card" onclick="location.href='zk.html'">
+                <h3>中考倒计时网页</h3>
+                <p class="project-description">
+                    实时倒计时精度±1秒<br>
+                    自动定位显示地区时间<br>
+                    支持主题切换<br>
+                    离线可用(PWA支持)
+                </p>
+            </div>
+
+            <!-- Alist项目卡 -->
+            <div class="project-card" id="alist-card" onclick="window.open('https://github.com/AniaDaniel2/ipAlistLauncher', '_blank')">
+                <h3>ipAlistLauncher</h3>
+                <p class="project-description">
+                    智能IP地址格式化与验证<br>
+                    多协议网络服务部署<br>
+                    配置文件版本控制<br>
+                    实时服务状态监控
+                </p>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
