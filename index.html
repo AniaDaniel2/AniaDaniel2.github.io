@@ -7,7 +7,7 @@
     <style>
         :root {
             --primary-color: #2A2A2A;
-            --accent-red: #FF0000;
+            --accent-red: #FF6B6B;
             --accent-blue: #6B8CFF;
             --text-color: #F5F5F5;
             --glass-bg: rgba(42, 42, 42, 0.85);
@@ -111,29 +111,33 @@
             margin-top: 1rem;
         }
 
+        /* 优化后的底部样式 */
         footer {
             margin-top: 4rem;
-            padding: 2rem;
+            padding: 2rem 0;
             text-align: center;
-            background: rgba(42, 42, 42, 0.9);
-            border-top: 1px solid rgba(255,255,255,0.1);
         }
 
         .footer-links {
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .footer-links a {
-            color: var(--text-color);
+            color: var(--accent-blue);
             text-decoration: none;
-            transition: opacity 0.3s;
             font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            background: rgba(107, 140, 255, 0.1);
         }
 
         .footer-links a:hover {
-            opacity: 0.8;
+            background: rgba(107, 140, 255, 0.2);
+            transform: translateY(-2px);
         }
 
         @media (max-width: 768px) {
@@ -141,8 +145,11 @@
                 gap: 1.5rem;
             }
             .footer-links {
-                flex-direction: column;
                 gap: 1rem;
+                padding: 0 1rem;
+            }
+            .footer-links a {
+                padding: 0.4rem 0.8rem;
             }
         }
     </style>
