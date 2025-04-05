@@ -111,9 +111,38 @@
             margin-top: 1rem;
         }
 
+        footer {
+            margin-top: 4rem;
+            padding: 2rem;
+            text-align: center;
+            background: rgba(42, 42, 42, 0.9);
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .footer-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+        }
+
         @media (max-width: 768px) {
             .nav-links {
                 gap: 1.5rem;
+            }
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
             }
         }
     </style>
@@ -135,7 +164,8 @@
         </section>
 
         <section class="projects">
-            <div class="project-card" id="countdown-card" onclick="location.href='zk.html'">
+            <div class="project-card" id="countdown-card" 
+                 onclick="window.open('https://github.com/AniaDaniel2/AniaDaniel2.github.io', '_blank')">
                 <h3>中考倒计时网页</h3>
                 <p class="project-description">
                     实时倒计时精度±1秒<br>
@@ -145,7 +175,8 @@
                 </p>
             </div>
 
-            <div class="project-card" id="alist-card" onclick="window.open('https://github.com/AniaDaniel2/ipAlistLauncher', '_blank')">
+            <div class="project-card" id="alist-card" 
+                 onclick="window.open('https://github.com/AniaDaniel2/ipAlistLauncher', '_blank')">
                 <h3>ipAlistLauncher</h3>
                 <p class="project-description">
                     智能IP地址格式化与验证<br>
@@ -155,6 +186,13 @@
                 </p>
             </div>
         </section>
+
+        <footer>
+            <div class="footer-links">
+                <a href="https://github.com/AniaDaniel2" target="_blank" rel="noopener noreferrer">AniaDaniel2 2024-2025</a>
+                <a href="https://www.deepseek.com/" target="_blank" rel="noopener noreferrer">感谢 DeepSeek 技术支持</a>
+            </div>
+        </footer>
     </div>
 </body>
 </html>
