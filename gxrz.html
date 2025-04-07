@@ -62,7 +62,6 @@
             padding-top: 8rem;
         }
 
-        /* 更新日志样式 */
         .version-card {
             background: var(--glass-bg);
             border-radius: 12px;
@@ -85,6 +84,22 @@
             border-radius: 8px;
         }
 
+        /* 优化后的第一行样式 */
+        .update-section .first-line {
+            display: block;
+            font-weight: 500;
+            line-height: 1.4;
+            margin-bottom: 1rem;
+            font-size: clamp(1.1rem, 4vw, 1.5rem);
+            word-break: break-word;
+        }
+
+        @media (max-width: 480px) {
+            .update-section .first-line {
+                font-size: 1.1rem;
+            }
+        }
+
         .loader {
             border: 4px solid var(--accent-blue);
             border-top: 4px solid transparent;
@@ -100,7 +115,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* 与主页一致的底部样式 */
         footer {
             margin-top: 4rem;
             padding: 2rem 0;
@@ -158,7 +172,7 @@
 
         <footer>
             <div class="footer-links">
-                <a href="https://github.com/AniaDaniel2" target="_blank" rel="noopener noreferrer">AniaDaniel2 2024</a>
+                <a href="https://github.com/AniaDaniel2" target="_blank" rel="noopener noreferrer">AniaDaniel2 2024-2025</a>
                 <a href="https://www.deepseek.com/" target="_blank" rel="noopener noreferrer">感谢 DeepSeek 技术支持</a>
             </div>
         </footer>
@@ -167,7 +181,6 @@
     <script>
         const REPO_URL = 'https://api.github.com/repos/AniaDaniel2/AniaDaniel2.github.io/releases';
 
-        // 增强版Markdown转换
         const markdownToHTML = (text) => {
             return text
                 .replace(/^### (.*$)/gim, '<h3>$1</h3>')
@@ -175,17 +188,29 @@
                 .replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>')
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                .replace(/!\[(.*?)\]\((.*?)\)/g, '<img alt="$1" src="$2">')
-                .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>')
+                .replace(/!$$(.*?)$$$(.*?)$/g, '<img alt="$1" src="$2">')
+                .replace(/$$(.*?)$$$(.*?)$/g, '<a href="$2" target="_blank">$1</a>')
                 .replace(/\n/g, '<br>');
         };
 
         const renderRelease = (release) => {
+            // 智能处理空行
+            const bodyLines = release.body.split('\n')
+                .map(line => line.trim())
+                .filter(line => line.length > 0);
+
+            const firstLine = bodyLines.length > 0 ? bodyLines[0] : '';
+            const restBody = bodyLines.slice(1).join('\n');
+
             return `
                 <div class="version-card">
                     <h2 class="version-title">${release.name}</h2>
                     <div class="update-section">
-                        ${markdownToHTML(release.body)}
+                        ${firstLine ? `
+                            <div class="first-line">
+                                ${markdownToHTML(firstLine)}
+                            </div>` : ''}
+                        ${restBody ? markdownToHTML(restBody) : ''}
                         <p class="release-date">发布日期：${new Date(release.published_at).toLocaleDateString('zh-CN')}</p>
                     </div>
                 </div>
