@@ -23,28 +23,8 @@
             <h1>AniaDaniel2</h1>
         </section>
 
-        <section class="projects">
-            <div class="project-card" id="countdown-card" 
-                 onclick="window.open('https://github.com/AniaDaniel2/AniaDaniel2.github.io', '_blank')">
-                <h3>中考倒计时网页</h3>
-                <p class="project-description">
-                    实时倒计时精度±1秒<br>
-                    自动定位显示地区时间<br>
-                    支持主题切换<br>
-                    离线可用(PWA支持)
-                </p>
-            </div>
-
-            <div class="project-card" id="alist-card" 
-                 onclick="window.open('https://github.com/AniaDaniel2/ipAlistLauncher', '_blank')">
-                <h3>ipAlistLauncher(已废弃)</h3>
-                <p class="project-description">
-                    智能IP地址格式化与验证<br>
-                    多协议网络服务部署<br>
-                    配置文件版本控制<br>
-                    实时服务状态监控
-                </p>
-            </div>
+        <section class="projects" id="projects-container">
+            <!-- 卡片内容由JavaScript动态加载 -->
         </section>
 
         <footer>
@@ -54,5 +34,47 @@
             </div>
         </footer>
     </div>
+
+    <script>
+        // 动态加载项目卡片
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('xm.json')
+                .then(response => {
+                    if (!response.ok) throw new Error('网络响应异常');
+                    return response.json();
+                })
+                .then(data => {
+                    const container = document.getElementById('projects-container');
+                    
+                    data.projects.forEach(project => {
+                        const card = document.createElement('div');
+                        card.className = 'project-card';
+                        card.id = project.id;
+                        card.style.border = `2px solid var(--${project.borderColor})`;
+                        card.onclick = () => window.open(project.link, '_blank');
+
+                        const title = document.createElement('h3');
+                        title.textContent = project.title;
+                        if (project.id === 'alist-card') {
+                            title.style.color = 'var(--accent-red)';
+                        }
+
+                        const description = document.createElement('p');
+                        description.className = 'project-description';
+                        description.innerHTML = project.description.join('<br>');
+
+                        card.appendChild(title);
+                        card.appendChild(description);
+                        container.appendChild(card);
+                    });
+                })
+                .catch(error => {
+                    console.error('加载项目数据失败:', error);
+                    // 显示错误信息
+                    const container = document.getElementById('projects-container');
+                    container.innerHTML = `<div class="error">无法加载项目数据，请稍后重试</div>`;
+                });
+        });
+    </script>
 </body>
 </html>
