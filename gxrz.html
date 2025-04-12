@@ -84,22 +84,6 @@
             border-radius: 8px;
         }
 
-        /* 优化后的第一行样式 */
-        .update-section .first-line {
-            display: block;
-            font-weight: 500;
-            line-height: 1.4;
-            margin-bottom: 1rem;
-            font-size: clamp(1.1rem, 4vw, 1.5rem);
-            word-break: break-word;
-        }
-
-        @media (max-width: 480px) {
-            .update-section .first-line {
-                font-size: 1.1rem;
-            }
-        }
-
         .loader {
             border: 4px solid var(--accent-blue);
             border-top: 4px solid transparent;
@@ -110,50 +94,77 @@
             margin: 2rem auto;
         }
 
+        .download-section {
+            margin-top: 1.5rem;
+            padding: 1rem 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .download-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            background: rgba(107, 140, 255, 0.1);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .download-item:hover {
+            background: rgba(107, 140, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .download-icon {
+            width: 24px;
+            height: 24px;
+            filter: invert(1);
+        }
+
+        .download-info {
+            flex-grow: 1;
+        }
+
+        .download-name {
+            font-weight: 500;
+            color: var(--accent-blue);
+        }
+
+        .file-description {
+            font-size: 0.8em;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+
+        .download-size {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .download-button {
+            background: var(--accent-blue);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .download-button:hover {
+            opacity: 0.9;
+        }
+
+        .error-details {
+            background: rgba(255, 107, 107, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-
-        footer {
-            margin-top: 4rem;
-            padding: 2rem 0;
-            text-align: center;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            color: var(--accent-blue);
-            text-decoration: none;
-            font-size: 0.9rem;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            transition: all 0.3s ease;
-            background: rgba(107, 140, 255, 0.1);
-        }
-
-        .footer-links a:hover {
-            background: rgba(107, 140, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                gap: 1.5rem;
-            }
-            .footer-links {
-                gap: 1rem;
-                padding: 0 1rem;
-            }
-            .footer-links a {
-                padding: 0.4rem 0.8rem;
-            }
         }
     </style>
 </head>
@@ -169,79 +180,167 @@
         <div id="release-container">
             <div class="loader"></div>
         </div>
-
-        <footer>
-            <div class="footer-links">
-                <a href="https://github.com/AniaDaniel2" target="_blank" rel="noopener noreferrer">AniaDaniel2 2024-2025</a>
-                <a href="https://www.deepseek.com/" target="_blank" rel="noopener noreferrer">感谢 DeepSeek 技术支持</a>
-            </div>
-        </footer>
     </div>
 
     <script>
-        const REPO_URL = 'https://api.github.com/repos/AniaDaniel2/AniaDaniel2.github.io/releases';
-
-        const markdownToHTML = (text) => {
-            return text
-                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-                .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-                .replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>')
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                .replace(/!$$(.*?)$$$(.*?)$/g, '<img alt="$1" src="$2">')
-                .replace(/$$(.*?)$$$(.*?)$/g, '<a href="$2" target="_blank">$1</a>')
-                .replace(/\n/g, '<br>');
+        // 配置项
+        const CONFIG = {
+            GITHUB_API: 'https://api.github.com/repos/AniaDaniel2/AniaDaniel2.github.io/releases',
+            DESCRIPTIONS_FILE: 'gxrz.json',
+            TEST_MODE: window.location.hostname === 'localhost',
+            TEST_DATA: {
+                file_descriptions: {
+                    "index.html": "[本地测试] 个人主页源代码",
+                    "index.css": "[本地测试] 样式代码",
+                    "zk.html": "[本地测试] 倒计时页面",
+                    "gxrz.html": "[本地测试] 更新日志",
+                    "xm.json": "[本地测试] 项目数据"
+                }
+            }
         };
 
-        const renderRelease = (release) => {
-            // 智能处理空行
-            const bodyLines = release.body.split('\n')
-                .map(line => line.trim())
-                .filter(line => line.length > 0);
+        // 状态管理
+        const state = {
+            fileDescriptions: {},
+            releases: []
+        };
 
-            const firstLine = bodyLines.length > 0 ? bodyLines[0] : '';
-            const restBody = bodyLines.slice(1).join('\n');
+        // 工具函数
+        const formatFileSize = bytes => {
+            if (!bytes) return '0 B';
+            const k = 1024;
+            const units = ['B', 'KB', 'MB', 'GB'];
+            const exp = Math.floor(Math.log(bytes) / Math.log(k));
+            return `${(bytes / Math.pow(k, exp)).toFixed(2)} ${units[exp]}`;
+        };
 
+        // 数据获取
+        const fetchWithTimeout = (url, options = {}, timeout = 5000) => {
+            return Promise.race([
+                fetch(url, options),
+                new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('请求超时')), timeout)
+                )
+            ]);
+        };
+
+        // 渲染逻辑
+        const renderError = error => {
             return `
-                <div class="version-card">
-                    <h2 class="version-title">${release.name}</h2>
+                <div class="version-card" style="border-color: var(--accent-red)">
+                    <h2 class="version-title">⚠️ 加载失败 - ${error.name}</h2>
                     <div class="update-section">
-                        ${firstLine ? `
-                            <div class="first-line">
-                                ${markdownToHTML(firstLine)}
-                            </div>` : ''}
-                        ${restBody ? markdownToHTML(restBody) : ''}
-                        <p class="release-date">发布日期：${new Date(release.published_at).toLocaleDateString('zh-CN')}</p>
+                        <div class="error-details">
+                            <p><strong>错误详情:</strong> ${error.message}</p>
+                            <p><strong>可能原因:</strong></p>
+                            <ul>
+                                ${error.message.includes('GitHub') ? 
+                                    '<li>GitHub仓库未公开</li><li>API请求次数超限</li>' : 
+                                    '<li>描述文件路径错误</li>'}
+                                <li>网络连接问题</li>
+                                <li>服务器响应异常</li>
+                            </ul>
+                        </div>
+                        <a href="${CONFIG.GITHUB_API}" 
+                           target="_blank"
+                           class="download-button">
+                            手动检查GitHub Releases
+                        </a>
                     </div>
                 </div>
             `;
         };
 
+        const renderRelease = release => {
+            const bodyContent = release.body 
+                ? release.body
+                    .replace(/^### (.*)/gm, '<h3>$1</h3>')
+                    .replace(/^## (.*)/gm, '<h2>$1</h2>')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\n/g, '<br>')
+                : '<p>暂无更新说明</p>';
+
+            return `
+                <div class="version-card">
+                    <h2 class="version-title">${release.name || '未命名版本'}</h2>
+                    <div class="update-section">
+                        ${bodyContent}
+                        <p class="release-date">
+                            发布日期：${new Date(release.published_at).toLocaleDateString('zh-CN')}
+                        </p>
+                    </div>
+                    ${release.assets?.length ? `
+                        <div class="download-section">
+                            <h3>📦 下载文件</h3>
+                            ${release.assets.map(asset => `
+                                <div class="download-item">
+                                    <svg class="download-icon" viewBox="0 0 24 24">
+                                        <path fill="currentColor" d="M14,2H6C4.89,2 4,2.89 4,4V20C4,21.11 4.89,22 6,22H18C19.11,22 20,21.11 20,20V8L14,2M12,19L8,15H10.5V12H13.5V15H16L12,19M13,9V3.5L18.5,9H13Z"/>
+                                    </svg>
+                                    <div class="download-info">
+                                        <div class="download-name">${asset.name}</div>
+                                        <div class="file-description">${state.fileDescriptions[asset.name] || '通用文件'}</div>
+                                        <div class="download-size">${formatFileSize(asset.size)}</div>
+                                    </div>
+                                    <a href="${asset.browser_download_url}" 
+                                       class="download-button"
+                                       download="${asset.name}"
+                                       target="_blank">
+                                        下载
+                                    </a>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        };
+
+        // 初始化
         window.addEventListener('DOMContentLoaded', async () => {
             const container = document.getElementById('release-container');
             
             try {
-                const response = await fetch(REPO_URL);
-                if (!response.ok) throw new Error(`HTTP错误 ${response.status}`);
-                
-                const releases = await response.json();
-                container.innerHTML = releases.map(renderRelease).join('');
+                // 本地测试模式
+                if (CONFIG.TEST_MODE) {
+                    state.fileDescriptions = CONFIG.TEST_DATA.file_descriptions;
+                    container.innerHTML = renderRelease({
+                        name: '本地测试版本',
+                        published_at: new Date().toISOString(),
+                        body: '## 本地测试模式\n网络请求已被禁用',
+                        assets: Object.keys(state.fileDescriptions).map(name => ({
+                            name,
+                            size: 1024,
+                            browser_download_url: '#'
+                        }))
+                    });
+                    return;
+                }
+
+                // 生产环境加载
+                const [descriptions, releases] = await Promise.all([
+                    fetchWithTimeout(CONFIG.DESCRIPTIONS_FILE)
+                        .then(r => r.ok ? r.json() : Promise.reject(new Error('描述文件加载失败'))),
+                    fetchWithTimeout(CONFIG.GITHUB_API, { 
+                        headers: { 
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Origin': window.location.origin
+                        }
+                    }).then(r => r.ok ? r.json() : Promise.reject(new Error(`GitHub API: ${r.status}`)))
+                ]);
+
+                state.fileDescriptions = descriptions.file_descriptions;
+                state.releases = releases.sort((a, b) => 
+                    new Date(b.published_at) - new Date(a.published_at)
+                );
+
+                container.innerHTML = state.releases.map(renderRelease).join('');
 
             } catch (error) {
-                console.error('加载失败:', error);
-                container.innerHTML = `
-                    <div class="version-card" style="border-color: var(--accent-red)">
-                        <h2 class="version-title">⚠️ 加载失败</h2>
-                        <div class="update-section">
-                            <p>${error.message}</p>
-                            <a href="https://github.com/AniaDaniel2/AniaDaniel2.github.io/releases" 
-                               target="_blank"
-                               class="footer-links a">
-                                手动访问GitHub Releases
-                            </a>
-                        </div>
-                    </div>
-                `;
+                console.error('Runtime Error:', error);
+                container.innerHTML = renderError(error);
+            } finally {
+                document.querySelector('.loader')?.remove();
             }
         });
     </script>
