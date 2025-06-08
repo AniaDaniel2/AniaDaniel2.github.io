@@ -4,10 +4,8 @@
       "id": "countdown-card",
       "title": "中考倒计时网页",
       "description": [
-        "实时倒计时精度±1秒",
-        "自动定位显示地区时间",
-        "支持主题切换",
-        "离线可用(PWA支持)"
+        "实时倒计时",
+        "解析ip地址(支持ipv6)"
       ],
       "link": "https://github.com/AniaDaniel2/AniaDaniel2.github.io",
       "borderColor": "accent-blue"
@@ -16,10 +14,9 @@
       "id": "alist-card",
       "title": "ipAlistLauncher(已废弃)",
       "description": [
-        "智能IP地址格式化与验证",
-        "多协议网络服务部署",
-        "配置文件版本控制",
-        "实时服务状态监控"
+        "IP地址验证",
+        "ipv6支持",
+        "自动保存配置文件",
       ],
       "link": "https://github.com/AniaDaniel2/ipAlistLauncher",
       "borderColor": "accent-red"
