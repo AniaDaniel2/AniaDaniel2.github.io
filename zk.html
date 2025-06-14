@@ -17,15 +17,7 @@
             --glass-bg: rgba(0, 0, 0, 0.35);
         }
 
-        /* 警告状态 */
-        .warning {
-            background: linear-gradient(45deg,
-                #FF0000, #C00000, #800000, #400000,
-                #800000, #C00000, #FF0000) !important;
-            background-size: 600% 600% !important;
-            animation: gradientFlow 4s linear infinite !important;
-        }
-
+        /* 优化后的主页按钮 */
         .home-button {
             position: fixed;
             right: 20px;
@@ -61,20 +53,17 @@
             filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.2));
         }
 
-        html {
-            font-size: calc(14px + 0.2vw);
-        }
-
-        * {
+        /* 原有样式 */
+        html { font-size: calc(14px + 0.2vw); }
+        * { 
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
-
         body {
             min-height: 100vh;
-            background: linear-gradient(45deg,
+            background: linear-gradient(45deg, 
                 var(--color1),
                 var(--color2),
                 var(--color3),
@@ -90,10 +79,8 @@
             align-items: center;
             font-family: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
             position: relative;
-            padding: 10px;
-            transition: background 1s ease;
+            padding: 10px; /* 添加内边距保证小屏空间 */
         }
-
         .glass-container {
             background: var(--glass-bg);
             backdrop-filter: blur(16px) saturate(180%);
@@ -105,56 +92,33 @@
             margin: 1rem;
             width: calc(100% - 2rem);
             max-width: 680px;
-            transition: all 0.5s ease;
         }
-
-        .warning-glass {
-            background: rgba(200, 0, 0, 0.45) !important;
-            border-color: rgba(255, 100, 100, 0.4) !important;
-            box-shadow: 0 12px 30px rgba(200, 0, 0, 0.4) !important;
-        }
-
         .countdown {
             display: flex;
-            gap: 0.8rem;
+            gap: 0.8rem; /* 减小默认间隙 */
             text-align: center;
             justify-content: space-around;
             flex-wrap: wrap;
             padding: 0.5rem;
         }
-
         .time-block {
             color: var(--text-color);
             text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.35);
             flex: 1;
-            min-width: 4.5rem;
+            min-width: 4.5rem; /* 减小最小宽度 */
             padding: 0.4rem;
-            transition: transform 0.3s;
         }
-
-        .time-block:hover {
-            transform: scale(1.05);
-        }
-
         .number {
-            font-size: clamp(2.0rem, 9vw, 3.8rem);
+            font-size: clamp(2.0rem, 9vw, 3.8rem); /* 调整字体大小范围 */
             font-weight: 700;
             margin-bottom: 0.2rem;
             line-height: 1.1;
-            letter-spacing: -1px;
-            transition: all 0.5s ease;
+            letter-spacing: -1px; /* 紧凑显示数字 */
         }
-
-        .warning-number {
-            animation: pulse 1s infinite;
-        }
-
         .label {
-            font-size: clamp(0.8rem, 3.6vw, 0.95rem);
+            font-size: clamp(0.8rem, 3.6vw, 0.95rem); /* 调整标签尺寸 */
             white-space: nowrap;
-            font-weight: 500;
         }
-
         .info-bar {
             position: fixed;
             bottom: 15px;
@@ -172,7 +136,6 @@
             overflow-x: auto;
             white-space: nowrap;
         }
-
         footer {
             position: fixed;
             bottom: 60px;
@@ -186,65 +149,19 @@
             gap: 1.0rem;
             flex-wrap: wrap;
         }
-
         footer a {
             color: var(--text-color);
             text-decoration: none;
             border-bottom: 1px solid rgba(255, 255, 255, 0.4);
             white-space: nowrap;
         }
-
         @keyframes gradientFlow {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                color: #FF4D4D;
-                text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
-            }
-            50% {
-                transform: scale(1.1);
-                color: #FF7F7F;
-                text-shadow: 0 0 20px rgba(255, 50, 50, 0.9);
-            }
-            100% {
-                transform: scale(1);
-                color: #FF4D4D;
-                text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
-            }
-        }
-
-        .warning-text {
-            position: absolute;
-            top: 30px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            color: white;
-            font-weight: bold;
-            font-size: 24px;
-            text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
-            opacity: 0;
-            transform: translateY(-30px);
-            transition: all 0.5s ease;
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
-        .show-warning {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* 响应式优化 */
+        /* 响应式优化 - 主要针对移动设备 */
         @media (max-width: 480px) {
             .glass-container {
                 padding: 1.2rem 1.0rem;
@@ -288,12 +205,9 @@
                 width: 20px;
                 height: 20px;
             }
-            .warning-text {
-                font-size: 18px;
-                top: 20px;
-            }
         }
-
+        
+        /* 针对极小屏幕 */
         @media (max-width: 340px) {
             .glass-container {
                 padding: 1.0rem;
@@ -313,10 +227,6 @@
             .label {
                 font-size: clamp(0.7rem, 4vw, 0.8rem);
             }
-            .warning-text {
-                font-size: 16px;
-                top: 15px;
-            }
         }
     </style>
 </head>
@@ -326,8 +236,6 @@
             <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2zm-1 9h2v6h-2z"/>
         </svg>
     </a>
-
-    <div class="warning-text" id="warningText">中考已开始，三天后考试结束！</div>
 
     <div class="glass-container">
         <div class="countdown">
@@ -361,77 +269,29 @@
     </footer>
 
     <script>
-        // 中考开始时间
-        const examStartDate = new Date('2025-06-17T00:00:00');
-        let targetDate = examStartDate.getTime();
-        let isFirstCountdownEnded = false;
-        let isWarningActive = false;
-
-        // 警告文字元素
-        const warningText = document.getElementById('warningText');
+        const examDate = new Date('2025-06-17T00:00:00').getTime();
 
         function updateTimer() {
             const now = Date.now();
-            let distance = targetDate - now;
+            const distance = examDate - now;
 
-            // 如果第一轮倒计时结束，启动3天倒计时
-            if (!isFirstCountdownEnded && distance < 0) {
-                // 设置新的3天倒计时目标时间
-                targetDate = now + 3 * 24 * 60 * 60 * 1000;
-                isFirstCountdownEnded = true;
-                
-                // 激活警告效果
-                activateWarningEffect();
-                warningText.classList.add('show-warning');
-            }
-
-            // 倒计时已完全结束
             if (distance < 0) {
-                // 保持00:00:00显示
-                document.getElementById('days').textContent = "00";
-                document.getElementById('hours').textContent = "00";
-                document.getElementById('minutes').textContent = "00";
-                document.getElementById('seconds').textContent = "00";
-                
-                // 应用结束样式
                 document.querySelectorAll('.number').forEach(el => {
-                    el.classList.add('warning-number');
+                    el.style.color = '#FF4D4D';
+                    el.style.textShadow = '0 0 12px rgba(255,0,110,0.8)';
                 });
-                
-                // 停止定时器
-                clearInterval(timerInterval);
-                return;
+                return clearInterval(timerInterval);
             }
 
-            // 计算时间单位
             const days = Math.floor(distance / 86400000);
             const hours = Math.floor((distance % 86400000) / 3600000);
             const minutes = Math.floor((distance % 3600000) / 60000);
             const seconds = Math.floor((distance % 60000) / 1000);
 
-            // 更新显示
             document.getElementById('days').textContent = days.toString().padStart(2, '0');
             document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
             document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
             document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-            
-            // 如果临近结束（3天内）且还未处于警告状态
-            if (!isWarningActive && distance < 3 * 24 * 60 * 60 * 1000) {
-                activateWarningEffect();
-                warningText.classList.add('show-warning');
-            }
-        }
-
-        // 激活警告效果
-        function activateWarningEffect() {
-            if (isWarningActive) return;
-            
-            isWarningActive = true;
-            document.body.classList.add('warning');
-            document.querySelector('.glass-container').classList.add('warning-glass');
-            document.querySelectorAll('.number').forEach(el => {
-                el.classList.add('warning-number');
-            });
         }
 
         async function fetchIPInfo() {
