@@ -3,10 +3,406 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AniaDaniel2 的主页</title>
-    <link rel="stylesheet" href="index.css">
+    <title>AniaDaniel2 | 个人主页</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a1a2e;
+            --secondary-color: #16213e;
+            --accent-red: #ff6b6b;
+            --accent-blue: #6b8cff;
+            --accent-purple: #a166ff;
+            --accent-teal: #2dd4bf;
+            --text-color: #f5f5f5;
+            --glass-bg: rgba(30, 30, 46, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--text-color);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-top: 80px;
+        }
+
+        .noise::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.2rem 2rem;
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            background: rgba(22, 22, 36, 0.75);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            padding: 0.8rem 2rem;
+            background: rgba(10, 10, 20, 0.9);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: var(--transition);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-blue);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-blue);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* 主要内容区域 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* 英雄区域样式 */
+        .hero {
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .avatar-container {
+            display: inline-block;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .avatar {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid transparent;
+            background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple)) border-box;
+            padding: 4px;
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
+        }
+
+        .avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(107, 140, 255, 0.4);
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hero h1 {
+            /* 减小"AniaDaniel2"的字体大小 */
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+            color: var(--text-color);
+        }
+
+        /* 项目卡片区域 */
+        .section-title {
+            text-align: center;
+            /* 减小"我的项目"的字体大小 */
+            font-size: 2.0rem;
+            margin-bottom: 3rem;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 2px;
+        }
+
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        .project-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(107, 140, 255, 0.3);
+        }
+
+        .project-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .project-description {
+            line-height: 1.8;
+            margin-top: 1.2rem;
+            color: rgba(245, 245, 245, 0.85);
+        }
+
+        .project-description p {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .project-description p::before {
+            content: "•";
+            color: var(--accent-blue);
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .project-link:hover {
+            color: var(--accent-purple);
+            gap: 0.8rem;
+        }
+
+        /* 页脚样式 */
+        footer {
+            margin-top: 6rem;
+            padding: 3rem 0 2rem;
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .copyright {
+            color: rgba(245, 245, 245, 0.7);
+            font-size: 0.95rem;
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* 错误信息样式 */
+        .error-message {
+            background: rgba(255, 107, 107, 0.15);
+            border: 1px solid var(--accent-red);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 2rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .error-message h3 {
+            color: var(--accent-red);
+            margin-bottom: 1rem;
+        }
+
+        .error-message p {
+            margin-bottom: 0.5rem;
+        }
+
+        .retry-button {
+            background: var(--accent-red);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 0.5rem 1.5rem;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .retry-button:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero, .project-card {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .project-card:nth-child(1) { animation-delay: 0.2s; }
+        .project-card:nth-child(2) { animation-delay: 0.4s; }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero h1 {
+                /* 减小移动设备上的字体大小 */
+                font-size: 2.2rem;
+            }
+            
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                gap: 1.5rem;
+            }
+            
+            .projects {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+            
+            /* 在移动设备上减小"我的项目"字体大小 */
+            .section-title {
+                font-size: 1.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                /* 减小小屏幕上"AniaDaniel2"字体大小 */
+                font-size: 1.8rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .avatar {
+                width: 120px;
+                height: 120px;
+            }
+            
+            /* 减小小屏幕上"我的项目"字体大小 */
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .copyright {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="noise"></div>
+    
     <nav class="navbar">
         <div class="nav-links">
             <a href="https://github.com/AniaDaniel2">我的项目</a>
@@ -17,20 +413,31 @@
 
     <div class="container">
         <section class="hero">
-            <img src="https://avatars.githubusercontent.com/u/130365608?v=4&size=150" 
-                 alt="GitHub头像" 
-                 class="avatar">
+            <div class="avatar-container">
+                <!-- 添加头像 -->
+                <img src="https://avatars.githubusercontent.com/u/130365608?v=4&size=150" 
+                     alt="AniaDaniel2 的头像" 
+                     class="avatar">
+            </div>
             <h1>AniaDaniel2</h1>
         </section>
 
+        <h2 class="section-title">我的项目</h2>
+        
         <section class="projects" id="projects-container">
             <!-- 卡片内容由JavaScript动态加载 -->
+            <div class="project-card-placeholder">
+                <p style="text-align: center; opacity: 0.7;">项目卡片将在这里显示</p>
+            </div>
         </section>
 
         <footer>
-            <div class="footer-links">
-                <a href="https://github.com/AniaDaniel2" target="_blank" rel="noopener noreferrer">AniaDaniel2 2024-2025</a>
-                <a href="https://www.deepseek.com/" target="_blank" rel="noopener noreferrer">感谢 DeepSeek 技术支持</a>
+            <div class="footer-content">
+                <div class="copyright">
+                    <span>© 2024-2025 AniaDaniel2</span> | 
+                    <span>DeepSeek 技术支持</span> | 
+                    <span>保留所有权利</span>
+                </div>
             </div>
         </footer>
     </div>
@@ -38,43 +445,102 @@
     <script>
         // 动态加载项目卡片
         document.addEventListener('DOMContentLoaded', function() {
+            // 从同目录加载xm.json
             fetch('xm.json')
                 .then(response => {
-                    if (!response.ok) throw new Error('网络响应异常');
+                    if (!response.ok) {
+                        throw new Error('xm.json文件不存在或无法访问');
+                    }
                     return response.json();
                 })
-                .then(data => {
-                    const container = document.getElementById('projects-container');
-                    
-                    data.projects.forEach(project => {
-                        const card = document.createElement('div');
-                        card.className = 'project-card';
-                        card.id = project.id;
-                        card.style.border = `2px solid var(--${project.borderColor})`;
-                        card.onclick = () => window.open(project.link, '_blank');
-
-                        const title = document.createElement('h3');
-                        title.textContent = project.title;
-                        if (project.id === 'alist-card') {
-                            title.style.color = 'var(--accent-red)';
-                        }
-
-                        const description = document.createElement('p');
-                        description.className = 'project-description';
-                        description.innerHTML = project.description.join('<br>');
-
-                        card.appendChild(title);
-                        card.appendChild(description);
-                        container.appendChild(card);
-                    });
-                })
-                .catch(error => {
-                    console.error('加载项目数据失败:', error);
-                    // 显示错误信息
-                    const container = document.getElementById('projects-container');
-                    container.innerHTML = `<div class="error">无法加载项目数据，请稍后重试</div>`;
-                });
+                .then(data => loadProjects(data))
+                .catch(error => handleError(error));
+            
+            // 导航栏滚动效果
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    document.querySelector('.navbar').classList.add('scrolled');
+                } else {
+                    document.querySelector('.navbar').classList.remove('scrolled');
+                }
+            });
         });
+        
+        function loadProjects(data) {
+            const container = document.getElementById('projects-container');
+            container.innerHTML = '';
+            
+            // 检查数据格式是否正确
+            if (!data || !data.projects || !Array.isArray(data.projects)) {
+                throw new Error('xm.json格式不正确');
+            }
+            
+            data.projects.forEach(project => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.id = project.id;
+                
+                // 设置顶部边框颜色
+                card.style.borderTop = `4px solid var(--${project.borderColor})`;
+                
+                const title = document.createElement('h3');
+                title.textContent = project.title;
+                
+                // 特殊卡片颜色设置
+                if (project.id === 'alist-card') {
+                    title.style.color = 'var(--accent-red)';
+                }
+
+                const description = document.createElement('div');
+                description.className = 'project-description';
+                
+                // 添加项目描述
+                project.description.forEach(line => {
+                    const p = document.createElement('p');
+                    p.textContent = line;
+                    description.appendChild(p);
+                });
+                
+                // 添加查看项目链接
+                const link = document.createElement('a');
+                link.className = 'project-link';
+                link.href = project.link;
+                link.target = '_blank';
+                link.innerHTML = '查看项目 <i class="fas fa-arrow-right"></i>';
+                link.onclick = (e) => {
+                    e.stopPropagation();
+                    window.open(project.link, '_blank');
+                };
+                
+                // 组装卡片
+                card.appendChild(title);
+                card.appendChild(description);
+                card.appendChild(link);
+                
+                // 卡片点击事件
+                card.addEventListener('click', () => {
+                    window.open(project.link, '_blank');
+                });
+                
+                container.appendChild(card);
+            });
+        }
+        
+        function handleError(error) {
+            console.error('加载项目数据失败:', error);
+            const container = document.getElementById('projects-container');
+            container.innerHTML = `
+                <div class="error-message">
+                    <h3><i class="fas fa-exclamation-triangle"></i> 加载项目数据失败</h3>
+                    <p>错误原因: ${error.message}</p>
+                    <p>请确保同目录下存在xm.json文件</p>
+                    <p>文件格式应包含有效的项目数组</p>
+                    <button class="retry-button" onclick="location.reload()">
+                        <i class="fas fa-sync-alt"></i> 重新加载
+                    </button>
+                </div>
+            `;
+        }
     </script>
 </body>
 </html>
