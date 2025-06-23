@@ -9,7 +9,7 @@
         :root {
             --primary-color: #1a1a2e;
             --secondary-color: #16213e;
-            --accent-red: #ff6b6b;
+            --accent-red: #ff极b6b;
             --accent-blue: #6b8cff;
             --accent-purple: #a166ff;
             --accent-teal: #2dd4bf;
@@ -43,7 +43,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3极%3C/svg%3E");
             opacity: 0.03;
             pointer-events: none;
             z-index: 100;
@@ -144,13 +144,7 @@
             box-shadow: 0 0 30px rgba(107, 140, 255, 0.4);
         }
 
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         .hero h1 {
-            /* 减小"AniaDaniel2"的字体大小 */
             font-size: 2.8rem;
             font-weight: 800;
             margin-bottom: 1rem;
@@ -161,7 +155,6 @@
         /* 项目卡片区域 */
         .section-title {
             text-align: center;
-            /* 减小"我的项目"的字体大小 */
             font-size: 2.0rem;
             margin-bottom: 3rem;
             font-weight: 700;
@@ -245,9 +238,7 @@
         }
 
         .project-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+            display: inline-block;
             margin-top: 1.5rem;
             color: var(--accent-blue);
             text-decoration: none;
@@ -257,7 +248,6 @@
 
         .project-link:hover {
             color: var(--accent-purple);
-            gap: 0.8rem;
         }
 
         /* 页脚样式 */
@@ -320,34 +310,14 @@
             transform: translateY(-2px);
         }
 
-        /* 动画效果 */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .hero, .project-card {
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-
-        .project-card:nth-child(1) { animation-delay: 0.2s; }
-        .project-card:nth-child(2) { animation-delay: 0.4s; }
-
         /* 响应式设计 */
         @media (max-width: 768px) {
             .hero h1 {
-                /* 减小移动设备上的字体大小 */
                 font-size: 2.2rem;
             }
             
@@ -367,7 +337,6 @@
                 padding: 1.5rem;
             }
             
-            /* 在移动设备上减小"我的项目"字体大小 */
             .section-title {
                 font-size: 1.7rem;
             }
@@ -375,7 +344,6 @@
 
         @media (max-width: 480px) {
             .hero h1 {
-                /* 减小小屏幕上"AniaDaniel2"字体大小 */
                 font-size: 1.8rem;
             }
             
@@ -389,7 +357,6 @@
                 height: 120px;
             }
             
-            /* 减小小屏幕上"我的项目"字体大小 */
             .section-title {
                 font-size: 1.5rem;
             }
@@ -414,10 +381,7 @@
     <div class="container">
         <section class="hero">
             <div class="avatar-container">
-                <!-- 添加头像 -->
-                <img src="https://avatars.githubusercontent.com/u/130365608?v=4&size=150" 
-                     alt="AniaDaniel2 的头像" 
-                     class="avatar">
+                <img src="https://avatars.githubusercontent.com/u/130365608?v=4&size=150" alt="头像" class="avatar">
             </div>
             <h1>AniaDaniel2</h1>
         </section>
@@ -425,7 +389,6 @@
         <h2 class="section-title">我的项目</h2>
         
         <section class="projects" id="projects-container">
-            <!-- 卡片内容由JavaScript动态加载 -->
             <div class="project-card-placeholder">
                 <p style="text-align: center; opacity: 0.7;">项目卡片将在这里显示</p>
             </div>
@@ -443,9 +406,7 @@
     </div>
 
     <script>
-        // 动态加载项目卡片
         document.addEventListener('DOMContentLoaded', function() {
-            // 从同目录加载xm.json
             fetch('xm.json')
                 .then(response => {
                     if (!response.ok) {
@@ -456,7 +417,6 @@
                 .then(data => loadProjects(data))
                 .catch(error => handleError(error));
             
-            // 导航栏滚动效果
             window.addEventListener('scroll', () => {
                 if (window.pageYOffset > 300) {
                     document.querySelector('.navbar').classList.add('scrolled');
@@ -470,7 +430,6 @@
             const container = document.getElementById('projects-container');
             container.innerHTML = '';
             
-            // 检查数据格式是否正确
             if (!data || !data.projects || !Array.isArray(data.projects)) {
                 throw new Error('xm.json格式不正确');
             }
@@ -479,14 +438,11 @@
                 const card = document.createElement('div');
                 card.className = 'project-card';
                 card.id = project.id;
-                
-                // 设置顶部边框颜色
                 card.style.borderTop = `4px solid var(--${project.borderColor})`;
                 
                 const title = document.createElement('h3');
                 title.textContent = project.title;
                 
-                // 特殊卡片颜色设置
                 if (project.id === 'alist-card') {
                     title.style.color = 'var(--accent-red)';
                 }
@@ -494,30 +450,26 @@
                 const description = document.createElement('div');
                 description.className = 'project-description';
                 
-                // 添加项目描述
                 project.description.forEach(line => {
                     const p = document.createElement('p');
                     p.textContent = line;
                     description.appendChild(p);
                 });
                 
-                // 添加查看项目链接
                 const link = document.createElement('a');
                 link.className = 'project-link';
                 link.href = project.link;
                 link.target = '_blank';
-                link.innerHTML = '查看项目 <i class="fas fa-arrow-right"></i>';
+                link.textContent = '查看项目';
                 link.onclick = (e) => {
                     e.stopPropagation();
                     window.open(project.link, '_blank');
                 };
                 
-                // 组装卡片
                 card.appendChild(title);
                 card.appendChild(description);
                 card.appendChild(link);
                 
-                // 卡片点击事件
                 card.addEventListener('click', () => {
                     window.open(project.link, '_blank');
                 });
