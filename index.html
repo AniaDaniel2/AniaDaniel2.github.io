@@ -84,7 +84,7 @@
         .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: 0;
+            bottom: 极
             left: 0;
             width: 0;
             height: 2px;
@@ -270,13 +270,11 @@
 
         .copyright {
             color: rgba(33, 37, 41, 0.6);
-            font-size: 0.95rem;
-            margin-top: 1.5rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
+            font极
+        }
+
+        .copyright span {
+            margin: 0 10px;
         }
 
         /* 错误信息样式 */
@@ -293,10 +291,12 @@
         .error-message h3 {
             color: var(--accent-red);
             margin-bottom: 1rem;
+            /* 删除了图标 */
         }
 
         .error-message p {
             margin-bottom: 0.5rem;
+            font-size: 0.95rem;
         }
 
         .retry-button {
@@ -399,27 +399,6 @@
             <div class="project-card placeholder">
                 <p style="text-align: center; opacity: 0.7;">项目卡片将在这里显示</p>
             </div>
-            
-            <!-- 替代项目示例（在没有xm.json文件时显示） -->
-            <div class="project-card accent-blue">
-                <h3>示例项目1</h3>
-                <div class="project-description">
-                    <p>这是一个项目示例卡片</p>
-                    <p>在没有加载真实数据时显示</p>
-                    <p>实际网站会读取xm.json文件</p>
-                </div>
-                <a href="#" class="project-link">查看项目</a>
-            </div>
-            
-            <div class="project-card accent-purple">
-                <h3>示例项目2</h3>
-                <div class="project-description">
-                    <p>卡片样式已更新为浅色主题</p>
-                    <p>项目描述文字清晰易读</p>
-                    <p>整体采用现代简约设计</p>
-                </div>
-                <a href="#" class="project-link">查看项目</a>
-            </div>
         </section>
 
         <footer>
@@ -462,7 +441,7 @@
         function loadProjects(data) {
             const container = document.getElementById('projects-container');
             
-            // 如果加载成功，移除占位符和示例
+            // 如果加载成功，移除占位符
             container.innerHTML = '';
             
             if (!data || !data.projects || !Array.isArray(data.projects)) {
@@ -509,7 +488,7 @@
             const container = document.getElementById('projects-container');
             container.innerHTML = `
                 <div class="error-message">
-                    <h3><i class="fas fa-exclamation-triangle"></i> 加载项目数据失败</h3>
+                    <h3>加载项目数据失败</h3>
                     <p>错误原因: ${error.message}</p>
                     <p>请确保同目录下存在xm.json文件</p>
                     <p>文件格式应包含有效的项目数组</p>
