@@ -7,16 +7,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #1a1a2e;
-            --secondary-color: #16213e;
+            --primary-color: #f8f9fa;
+            --secondary-color: #ffffff;
             --accent-red: #ff6b6b;
-            --accent-blue: #6b8cff;
-            --accent-purple: #a166ff;
-            --accent-teal: #2dd4bf;
-            --text-color: #f5f5f5;
-            --glass-bg: rgba(30, 30, 46, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 8px 32px rgba(0, 极, 0, 0.2);
+            --accent-blue: #1a73e8;
+            --accent-purple: #5e35b1;
+            --accent-teal: #00897b;
+            --text-color: #212529;
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(0, 0, 0, 0.07);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
             --transition: all 0.3s ease;
         }
 
@@ -28,7 +28,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: #ffffff;
             color: var(--text-color);
             min-height: 100vh;
             line-height: 1.6;
@@ -36,17 +36,9 @@
             padding-top: 80px;
         }
 
+        /* 移除噪点效果 */
         .noise::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            opacity: 0.03;
-            pointer-events: none;
-            z-index: 100;
+            display: none;
         }
 
         /* 导航栏样式 */
@@ -58,20 +50,22 @@
             padding: 1.2rem 2rem;
             backdrop-filter: blur(12px) saturate(180%);
             -webkit-backdrop-filter: blur(12px) saturate(180%);
-            background: rgba(22, 22, 36, 0.75);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            border-bottom: 1px solid var(--glass-border);
-            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            z-index: 10000;
             transition: var(--transition);
+            display: flex;
+            justify-content: center;
         }
 
         .navbar.scrolled {
             padding: 0.8rem 2rem;
-            background: rgba(10, 10, 20, 0.9);
+            background: rgba(255, 255, 255, 0.98);
         }
 
         .nav-links {
-            display:极 flex;
+            display: flex;
             gap: 2.5rem;
             justify-content: center;
             align-items: center;
@@ -182,29 +176,18 @@
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             padding: 1.8rem;
-            cursor: pointer;
-            transition: var(--transition);
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             box-shadow: var(--glass-shadow);
-        }
-
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            border-radius: 8px 8px 0 0;
+            transition: var(--transition);
         }
 
         .project-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            border-color: rgba(107, 140, 255, 0.3);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+            border-color: rgba(26, 115, 232, 0.2);
         }
 
         .project-card h3 {
@@ -215,7 +198,7 @@
         .project-description {
             line-height: 1.8;
             margin-top: 1.2rem;
-            color: rgba(245, 245, 245, 0.85);
+            color: rgba(33, 37, 41, 0.85);
         }
 
         .project-description p {
@@ -238,6 +221,7 @@
             text-decoration: none;
             font-weight: 500;
             transition: var(--transition);
+            cursor: pointer;
         }
 
         .project-link:hover {
@@ -245,6 +229,16 @@
         }
 
         /* 项目卡片颜色适配 */
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            border-radius: 8px 8px 0 0;
+        }
+        
         .project-card.accent-blue::before {
             background: var(--accent-blue);
         }
@@ -275,7 +269,7 @@
         }
 
         .copyright {
-            color: rgba(245, 245, 245, 0.7);
+            color: rgba(33, 37, 41, 0.6);
             font-size: 0.95rem;
             margin-top: 1.5rem;
             display: flex;
@@ -287,7 +281,7 @@
 
         /* 错误信息样式 */
         .error-message {
-            background: rgba(255, 107, 107, 0.15);
+            background: rgba(255, 107, 107, 0.1);
             border: 1px solid var(--accent-red);
             border-radius: 8px;
             padding: 1.5rem;
@@ -372,15 +366,16 @@
                 font-size: 1.5rem;
             }
             
+            /* 手机屏幕上版权信息保持水平显示 */
             .copyright {
-                flex-direction: column;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
-    <div class="noise"></div>
-    
     <nav class="navbar">
         <div class="nav-links">
             <a href="https://github.com/AniaDaniel2">我的项目</a>
@@ -392,7 +387,7 @@
     <div class="container">
         <section class="hero">
             <div class="avatar-container">
-                
+                <img src="https://avatars.githubusercontent.com/u/130365608?v=4" alt="头像" class="avatar">
             </div>
             <h1>AniaDaniel2</h1>
         </section>
@@ -400,8 +395,30 @@
         <h2 class="section-title">我的项目</h2>
         
         <section class="projects" id="projects-container">
-            <div class="project-card-placeholder">
+            <!-- 项目卡片占位符 -->
+            <div class="project-card placeholder">
                 <p style="text-align: center; opacity: 0.7;">项目卡片将在这里显示</p>
+            </div>
+            
+            <!-- 替代项目示例（在没有xm.json文件时显示） -->
+            <div class="project-card accent-blue">
+                <h3>示例项目1</h3>
+                <div class="project-description">
+                    <p>这是一个项目示例卡片</p>
+                    <p>在没有加载真实数据时显示</p>
+                    <p>实际网站会读取xm.json文件</p>
+                </div>
+                <a href="#" class="project-link">查看项目</a>
+            </div>
+            
+            <div class="project-card accent-purple">
+                <h3>示例项目2</h3>
+                <div class="project-description">
+                    <p>卡片样式已更新为浅色主题</p>
+                    <p>项目描述文字清晰易读</p>
+                    <p>整体采用现代简约设计</p>
+                </div>
+                <a href="#" class="project-link">查看项目</a>
             </div>
         </section>
 
@@ -418,15 +435,8 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('xm.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('xm.json文件不存在或无法访问');
-                    }
-                    return response.json();
-                })
-                .then(data => loadProjects(data))
-                .catch(error => handleError(error));
+            // 尝试加载项目数据
+            fetchProjectData();
             
             window.addEventListener('scroll', () => {
                 if (window.pageYOffset > 300) {
@@ -437,8 +447,22 @@
             });
         });
         
+        function fetchProjectData() {
+            fetch('xm.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('xm.json文件不存在或无法访问');
+                    }
+                    return response.json();
+                })
+                .then(data => loadProjects(data))
+                .catch(error => handleError(error));
+        }
+        
         function loadProjects(data) {
             const container = document.getElementById('projects-container');
+            
+            // 如果加载成功，移除占位符和示例
             container.innerHTML = '';
             
             if (!data || !data.projects || !Array.isArray(data.projects)) {
@@ -471,18 +495,10 @@
                 link.href = project.link;
                 link.target = '_blank';
                 link.textContent = '查看项目';
-                link.onclick = (e) => {
-                    e.stopPropagation();
-                    window.open(project.link, '_blank');
-                };
                 
                 card.appendChild(title);
                 card.appendChild(description);
                 card.appendChild(link);
-                
-                card.addEventListener('click', () => {
-                    window.open(project.link, '_blank');
-                });
                 
                 container.appendChild(card);
             });
@@ -497,8 +513,8 @@
                     <p>错误原因: ${error.message}</p>
                     <p>请确保同目录下存在xm.json文件</p>
                     <p>文件格式应包含有效的项目数组</p>
-                    <button class="retry-button" onclick="location.reload()">
-                        <i class="fas fa-sync-alt"></i> 重新加载
+                    <button class="retry-button" onclick="fetchProjectData()">
+                        <i class="fas fa-sync-alt"></i> 重新尝试
                     </button>
                 </div>
             `;
