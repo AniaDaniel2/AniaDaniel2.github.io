@@ -5,7 +5,8 @@
       "title": "个人主页暨暑假倒计时 更新至1.4版本",
       "description": [
         "实时倒计时",
-        "解析ip地址(支持ipv6)"
+        "解析ip地址(支持ipv6)",
+        "多页面转跳"
       ],
       "link": "https://github.com/AniaDaniel2/AniaDaniel2.github.io",
       "borderColor": "accent-blue"
