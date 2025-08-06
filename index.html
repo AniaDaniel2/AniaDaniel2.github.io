@@ -69,28 +69,28 @@
             gap: 2.5rem;
             justify-content: center;
             align-items: center;
-            height: 100%; /* 确保容器有高度 */
+            height: 100%;
         }
 
-        /* 修复对齐问题：设置相同高度和垂直对齐 */
+        /* 修复：移除第一个链接的特殊颜色 */
         .nav-links a {
-            color: var(--text-color);
+            color: var(--text-color); /* 统一颜色 */
             text-decoration: none;
             font-weight: 500;
             font-size: 1.1rem;
             position: relative;
             padding: 0.5rem 0;
             transition: var(--transition);
-            min-width: 120px; /* 确保最小宽度一致 */
-            display: inline-flex; /* 使所有项有相同高度 */
-            align-items: center; /* 垂直居中 */
-            justify-content: center; /* 水平居中 */
-            height: 100%; /* 高度填满容器 */
+            min-width: 120px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
         }
 
-        /* 第一个链接设置为蓝色 */
+        /* 移除旧的首个链接特殊样式 */
         .nav-links a:first-child {
-            color: var(--accent-blue);
+            color: var(--text-color); /* 与其他链接相同 */
         }
 
         .nav-links a::after {
@@ -173,7 +173,7 @@
             width: 80px;
             height: 4px;
             background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
-            border-radius: 极
+            border-radius: 4px;
         }
 
         .projects {
@@ -345,11 +345,11 @@
             .nav-links {
                 gap: 1.5rem;
                 width: 100%;
-                justify-content: space-around; /* 确保在小屏幕均匀分布 */
+                justify-content: space-around;
             }
             
             .nav-links a {
-                min-width: auto; /* 在小屏幕上去除最小宽度限制 */
+                min-width: auto;
                 padding: 0.5rem;
                 font-size: 1rem;
             }
@@ -378,8 +378,8 @@
             
             .nav-links a {
                 font-size: 0.9rem;
-                min-width: 30%; /* 确保在小屏幕上均匀分布 */
-                padding: 0.5rem 0.2rem; /* 调整内边距 */
+                min-width: 30%;
+                padding: 0.5rem 0.2rem;
             }
             
             .avatar {
@@ -391,7 +391,6 @@
                 font-size: 1.5rem;
             }
             
-            /* 手机屏幕上版权信息保持水平显示 */
             .copyright {
                 flex-direction: row;
                 flex-wrap: wrap;
@@ -419,27 +418,9 @@
 
         <h2 class="section-title">我的项目</h2>
         
+        <!-- 已删除示例项目卡片 -->
         <section class="projects" id="projects-container">
-            <!-- 示例项目 -->
-            <div class="project-card accent-blue">
-                <h3>项目名称</h3>
-                <div class="project-description">
-                    <p>这是一个示例项目卡片</p>
-                    <p>实际网站会读取xm.json文件</p>
-                    <p>导航栏错位问题已修复</p>
-                </div>
-                <a href="#" class="project-link">查看项目</a>
-            </div>
-            
-            <div class="project-card accent-purple">
-                <h3>另一个项目</h3>
-                <div class="project-description">
-                    <p>项目描述文字清晰易读</p>
-                    <p>整体采用现代简约设计</p>
-                    <p>导航项现在水平对齐</p>
-                </div>
-                <a href="#" class="project-link">查看项目</a>
-            </div>
+            <!-- 项目将从 xm.json 动态加载 -->
         </section>
 
         <footer>
@@ -455,7 +436,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 尝试加载项目数据
             fetchProjectData();
             
             window.addEventListener('scroll', () => {
@@ -482,7 +462,7 @@
         function loadProjects(data) {
             const container = document.getElementById('projects-container');
             
-            // 如果加载成功，移除示例
+            // 清空容器
             container.innerHTML = '';
             
             if (!data || !data.projects || !Array.isArray(data.projects)) {
