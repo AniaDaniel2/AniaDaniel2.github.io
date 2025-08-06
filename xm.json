@@ -11,6 +11,16 @@
       "borderColor": "accent-blue"
     },
     {
+      "id": "repo-downloader",
+      "title": "github项目下载器",
+      "description": [
+        "XXXXX",
+        "XXXXX"
+      ],
+      "link": "XXXXX",
+      "borderColor": "accent-blue"
+    },
+    {
       "id": "alist-card",
       "title": "ipAlistLauncher(已废弃)",
       "description": [
