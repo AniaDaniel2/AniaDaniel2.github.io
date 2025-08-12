@@ -6,11 +6,14 @@
     <title>更新日志 - AniaDaniel2</title>
     <style>
         :root {
-            --primary-color: #2A2A2A;
-            --accent-red: #FF6B6B;
-            --accent-blue: #6B8CFF;
-            --text-color: #F5F5F5;
-            --glass-bg: rgba(42, 42, 42, 0.85);
+            --primary-color: #f8f9fa;
+            --accent-red: #ff6b6b;
+            --accent-blue: #1a73e8;
+            --accent-purple: #5e35b1;
+            --text-color: #212529;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(0, 0, 0, 0.07);
+            --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
 
         * {
@@ -22,37 +25,64 @@
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
             line-height: 1.6;
-            background: linear-gradient(45deg, 
-                #2A2A2A,
-                #3A3A3A,
-                #4A4A4A);
+            background: #ffffff;
             color: var(--text-color);
             min-height: 100vh;
         }
 
         .navbar {
-            backdrop-filter: blur(10px);
-            padding: 1.5rem;
+            padding: 1.2rem 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid var(--glass-border);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
+            display: flex;
+            justify-content: center;
         }
 
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 2.5rem;
             justify-content: center;
+            align-items: center;
+            height: 100%;
         }
 
         .nav-links a {
             color: var(--text-color);
             text-decoration: none;
-            transition: opacity 0.3s;
+            font-weight: 500;
+            font-size: 1.1rem;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+            min-width: 120px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-blue);
+            transition: all 0.3s ease;
         }
 
         .nav-links a:hover {
-            opacity: 0.8;
+            color: var(--accent-blue);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         .container {
@@ -66,22 +96,38 @@
             background: var(--glass-bg);
             border-radius: 12px;
             padding: 2rem;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             border-left: 5px solid var(--accent-blue);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: var(--glass-shadow);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .version-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
         }
 
         .version-title {
-            color: var(--accent-red);
+            color: var(--accent-purple);
             margin-bottom: 1.5rem;
             font-size: 1.8rem;
+            font-weight: 700;
         }
 
         .update-section {
             margin: 1.5rem 0;
-            padding: 1rem;
-            background: rgba(0,0,0,0.2);
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.02);
             border-radius: 8px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .release-date {
+            font-size: 0.95rem;
+            color: rgba(33, 37, 41, 0.7);
+            margin-top: 0.8rem;
+            font-weight: 500;
         }
 
         .loader {
@@ -97,29 +143,44 @@
         .download-section {
             margin-top: 1.5rem;
             padding: 1rem 0;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .download-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+            color: var(--text-color);
+            font-weight: 600;
         }
 
         .download-item {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            padding: 0.8rem;
-            margin: 0.5rem 0;
-            background: rgba(107, 140, 255, 0.1);
+            gap: 1.2rem;
+            padding: 1rem;
+            margin: 0.8rem 0;
+            background: rgba(26, 115, 232, 0.03);
             border-radius: 8px;
             transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
         }
 
         .download-item:hover {
-            background: rgba(107, 140, 255, 0.2);
+            background: rgba(26, 115, 232, 0.08);
             transform: translateX(5px);
         }
 
         .download-icon {
-            width: 24px;
-            height: 24px;
-            filter: invert(1);
+            width: 28px;
+            height: 28px;
+            background: var(--accent-blue);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
         }
 
         .download-info {
@@ -127,44 +188,113 @@
         }
 
         .download-name {
-            font-weight: 500;
-            color: var(--accent-blue);
+            font-weight: 600;
+            color: var(--text-color);
         }
 
         .file-description {
-            font-size: 0.8em;
-            opacity: 0.7;
+            font-size: 0.85rem;
+            color: rgba(33, 37, 41, 0.7);
             margin-top: 4px;
         }
 
         .download-size {
             font-size: 0.85rem;
-            opacity: 0.8;
+            color: rgba(33, 37, 41, 0.6);
         }
 
         .download-button {
             background: var(--accent-blue);
             color: white;
-            padding: 0.5rem 1rem;
+            padding: 0.6rem 1.2rem;
             border-radius: 6px;
             text-decoration: none;
-            transition: opacity 0.3s;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.2);
         }
 
         .download-button:hover {
-            opacity: 0.9;
+            background: #0d61d1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
         }
 
         .error-details {
-            background: rgba(255, 107, 107, 0.1);
-            padding: 1rem;
+            background: rgba(255, 107, 107, 0.08);
+            padding: 1.2rem;
             border-radius: 8px;
             margin: 1rem 0;
+            border: 1px solid rgba(255, 107, 107, 0.2);
+        }
+
+        .error-details p {
+            margin-bottom: 0.8rem;
+        }
+
+        .error-details ul {
+            padding-left: 1.5rem;
+            margin-top: 0.8rem;
+        }
+
+        .error-details li {
+            margin-bottom: 0.4rem;
         }
 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1.5rem;
+            }
+            
+            .nav-links a {
+                min-width: auto;
+                font-size: 1rem;
+            }
+            
+            .container {
+                padding: 1.5rem;
+                padding-top: 6rem;
+            }
+            
+            .version-card {
+                padding: 1.5rem;
+            }
+            
+            .download-item {
+                padding: 0.8rem;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links {
+                gap: 1rem;
+                justify-content: space-around;
+            }
+            
+            .nav-links a {
+                font-size: 0.9rem;
+                min-width: 30%;
+                padding: 0.5rem 0.2rem;
+            }
+            
+            .version-title {
+                font-size: 1.5rem;
+            }
+            
+            .download-item {
+                flex-wrap: wrap;
+            }
+            
+            .download-button {
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -227,7 +357,7 @@
         // 渲染逻辑
         const renderError = error => {
             return `
-                <div class="version-card" style="border-color: var(--accent-red)">
+                <div class="version-card" style="border-left-color: var(--accent-red)">
                     <h2 class="version-title">⚠️ 加载失败 - ${error.name}</h2>
                     <div class="update-section">
                         <div class="error-details">
@@ -266,7 +396,7 @@
                     <div class="update-section">
                         ${bodyContent}
                         <p class="release-date">
-                            发布日期：${new Date(release.published_at).toLocaleDateString('zh-CN')}
+                            发布日期：${new Date(release.published_at).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
                         </p>
                     </div>
                     ${release.assets?.length ? `
@@ -274,9 +404,7 @@
                             <h3>📦 下载文件</h3>
                             ${release.assets.map(asset => `
                                 <div class="download-item">
-                                    <svg class="download-icon" viewBox="0 0 24 24">
-                                        <path fill="currentColor" d="M14,2H6C4.89,2 4,2.89 4,4V20C4,21.11 4.89,22 6,22H18C19.11,22 20,21.11 20,20V8L14,2M12,19L8,15H10.5V12H13.5V15H16L12,19M13,9V3.5L18.5,9H13Z"/>
-                                    </svg>
+                                    <div class="download-icon">${asset.name.split('.')[0].substring(0, 2).toUpperCase()}</div>
                                     <div class="download-info">
                                         <div class="download-name">${asset.name}</div>
                                         <div class="file-description">${state.fileDescriptions[asset.name] || '通用文件'}</div>
@@ -310,7 +438,7 @@
                         body: '## 本地测试模式\n网络请求已被禁用',
                         assets: Object.keys(state.fileDescriptions).map(name => ({
                             name,
-                            size: 1024,
+                            size: 1024 * 102,
                             browser_download_url: '#'
                         }))
                     });
