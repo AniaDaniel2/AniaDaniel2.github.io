@@ -2,7 +2,7 @@
   "projects": [
     {
       "id": "countdown-card",
-      "title": "个人主页暨暑假倒计时 更新至1.4版本",
+      "title": "个人主页暨春节倒计时 更新至1.5版本",
       "description": [
         "实时倒计时",
         "解析ip地址(支持ipv6)",
