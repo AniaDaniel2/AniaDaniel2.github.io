@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>更新日志 - AniaDaniel2</title>
+    <style>
+        :root {
+            --primary-color: #f8f9fa;
+            --accent-red: #ff6b6b;
+            --accent-blue: #1a73e8;
+            --accent-purple: #5e35b1;
+            --text-color: #212529;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(0, 0, 0, 0.07);
+            --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary-color: #121212;
+                --accent-red: #ff6b6b;
+                --accent-blue: #4a9eff;
+                --accent-purple: #9575cd;
+                --text-color: #e0e0e0;
+                --glass-bg: rgba(30, 30, 30, 0.96);
+                --glass-border: rgba(255, 255, 255, 0.08);
+                --glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            }
+
+            body {
+                background: #1a1a1a !important;
+            }
+
+            .navbar {
+                background: rgba(30, 30, 30, 0.96) !important;
+                border-bottom-color: var(--glass-border) !important;
+            }
+
+            .update-section {
+                background: rgba(255, 255, 255, 0.04) !important;
+            }
+
+            .download-item {
+                background: rgba(74, 158, 255, 0.08) !important;
+            }
+
+            .download-item:hover {
+                background: rgba(74, 158, 255, 0.16) !important;
+            }
+
+            .release-date,
+            .file-description {
+                color: rgba(224, 224, 224, 0.7) !important;
+            }
+
+            .download-size {
+                color: rgba(224, 224, 224, 0.55) !important;
+            }
+
+            .error-details {
+                background: rgba(255, 107, 107, 0.12) !important;
+                border-color: rgba(255, 107, 107, 0.25) !important;
+            }
+
+            .error-details p,
+            .error-details li {
+                color: #e0e0e0;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            background: #ffffff;
+            color: var(--text-color);
+            min-height: 100vh;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar {
+            padding: 1.2rem 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid var(--glass-border);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 550;
+            font-size: 1.1rem;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-blue);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-blue);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            padding-top: 8rem;
+        }
+
+        .version-card {
+            background: var(--glass-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            border-left: 5px solid var(--accent-blue);
+            box-shadow: var(--glass-shadow);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease, background 0.3s ease;
+        }
+
+        .version-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .version-title {
+            color: var(--accent-purple);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        .update-section {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            transition: background 0.3s ease;
+        }
+
+        .release-date {
+            font-size: 0.95rem;
+            color: rgba(33, 37, 41, 0.7);
+            margin-top: 0.8rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .loader {
+            border: 4px solid var(--accent-blue);
+            border-top: 4px solid transparent;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            animation: spin 0.8s linear infinite;
+            margin: 3rem auto;
+        }
+
+        .download-section {
+            margin-top: 1.5rem;
+            padding: 1rem 0;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .download-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+            color: var(--text-color);
+            font-weight: 650;
+        }
+
+        .download-item {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            padding: 1rem;
+            margin: 0.8rem 0;
+            background: rgba(26, 115, 232, 0.03);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+
+        .download-item:hover {
+            background: rgba(26, 115, 232, 0.08);
+            transform: translateX(5px);
+        }
+
+        .download-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-blue);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .download-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .download-name {
+            font-weight: 620;
+            color: var(--text-color);
+        }
+
+        .file-description {
+            font-size: 0.88rem;
+            color: rgba(33, 37, 41, 0.65);
+            margin-top: 4px;
+        }
+
+        .download-size {
+            font-size: 0.82rem;
+            color: rgba(33, 37, 41, 0.55);
+            margin-top: 2px;
+        }
+
+        .download-button {
+            background: var(--accent-blue);
+            color: #fff;
+            padding: 0.6rem 1.4rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            font-weight: 520;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.18);
+            flex-shrink: 0;
+        }
+
+        .download-button:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(26, 115, 232, 0.28);
+        }
+
+        .error-details {
+            background: rgba(255, 107, 107, 0.06);
+            padding: 1.2rem 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border: 1px solid rgba(255, 107, 107, 0.18);
+        }
+
+        .error-details p {
+            margin-bottom: 0.6rem;
+        }
+
+        .error-details ul {
+            padding-left: 1.5rem;
+            margin-top: 0.6rem;
+        }
+
+        .error-details li {
+            margin-bottom: 0.3rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 900px) {
+            .navbar {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                padding: 0;
+            }
+
+            .container {
+                padding: 1.5rem;
+                padding-top: 6.5rem;
+            }
+
+            .version-card {
+                padding: 1.5rem;
+            }
+
+            .download-item {
+                flex-wrap: wrap;
+                gap: 0.8rem;
+            }
+
+            .download-button {
+                width: 100%;
+                text-align: center;
+                padding: 0.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links a {
+                font-size: 1rem;
+            }
+
+            .version-title {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                padding: 1rem;
+                padding-top: 5.5rem;
+            }
+
+            .version-card {
+                padding: 1.2rem;
+            }
+
+            .update-section {
+                padding: 1rem;
+            }
+
+            .download-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="index.html">← 返回主页</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div id="release-container">
+            <div class="loader"></div>
+        </div>
+    </div>
+
+    <script>
+        const CONFIG = {
+            GITHUB_API: 'https://api.github.com/repos/AniaDaniel2/AniaDaniel2.github.io/releases',
+            DESCRIPTIONS_FILE: 'gxrz.json'
+        };
+
+        const state = {
+            fileDescriptions: {},
+            releases: []
+        };
+
+        const formatFileSize = bytes => {
+            if (!bytes) return '0 B';
+            const k = 1024;
+            const units = ['B', 'KB', 'MB', 'GB'];
+            const exp = Math.floor(Math.log(bytes) / Math.log(k));
+            return `${(bytes / Math.pow(k, exp)).toFixed(2)} ${units[exp]}`;
+        };
+
+        const fetchWithTimeout = (url, options = {}, timeout = 8000) => {
+            return Promise.race([
+                fetch(url, options),
+                new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('请求超时')), timeout)
+                )
+            ]);
+        };
+
+        const renderError = error => {
+            return `
+                <div class="version-card" style="border-left-color: var(--accent-red)">
+                    <h2 class="version-title">加载失败 - ${error.name}</h2>
+                    <div class="update-section">
+                        <div class="error-details">
+                            <p><strong>错误详情:</strong> ${error.message}</p>
+                            <p><strong>可能原因:</strong></p>
+                            <ul>
+                                ${error.message.includes('GitHub') ? 
+                                    '<li>GitHub仓库未公开</li><li>API请求次数超限</li>' : 
+                                    '<li>描述文件路径错误</li>'}
+                                <li>网络连接问题</li>
+                                <li>服务器响应异常</li>
+                            </ul>
+                        </div>
+                        <a href="${CONFIG.GITHUB_API}" 
+                           target="_blank"
+                           class="download-button">
+                            查看GitHub Releases
+                        </a>
+                    </div>
+                </div>
+            `;
+        };
+
+        const renderRelease = release => {
+            const bodyContent = release.body 
+                ? release.body
+                    .replace(/^### (.*)/gm, '<h3>$1</h3>')
+                    .replace(/^## (.*)/gm, '<h2>$1</h2>')
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\n/g, '<br>')
+                : '<p>暂无更新说明</p>';
+
+            return `
+                <div class="version-card">
+                    <h2 class="version-title">${release.name || '未命名版本'}</h2>
+                    <div class="update-section">
+                        ${bodyContent}
+                        <p class="release-date">
+                            发布日期：${new Date(release.published_at).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
+                        </p>
+                    </div>
+                    ${release.assets?.length ? `
+                        <div class="download-section">
+                            <h3>📦 下载文件</h3>
+                            ${release.assets.map(asset => `
+                                <div class="download-item">
+                                    <div class="download-icon">${asset.name.split('.')[0].substring(0, 2).toUpperCase()}</div>
+                                    <div class="download-info">
+                                        <div class="download-name">${asset.name}</div>
+                                        <div class="file-description">${state.fileDescriptions[asset.name] || '通用文件'}</div>
+                                        <div class="download-size">${formatFileSize(asset.size)}</div>
+                                    </div>
+                                    <a href="${asset.browser_download_url}" 
+                                       class="download-button"
+                                       download="${asset.name}"
+                                       target="_blank">
+                                        下载
+                                    </a>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        };
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const container = document.getElementById('release-container');
+            
+            try {
+                const [descriptions, releases] = await Promise.all([
+                    fetchWithTimeout(CONFIG.DESCRIPTIONS_FILE)
+                        .then(r => r.ok ? r.json() : Promise.reject(new Error('描述文件加载失败'))),
+                    fetchWithTimeout(CONFIG.GITHUB_API, { 
+                        headers: { 
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Origin': window.location.origin
+                        }
+                    }).then(r => r.ok ? r.json() : Promise.reject(new Error(`GitHub API: ${r.status}`)))
+                ]);
+
+                state.fileDescriptions = descriptions.file_descriptions;
+                state.releases = releases.sort((a, b) => 
+                    new Date(b.published_at) - new Date(a.published_at)
+                );
+
+                container.innerHTML = state.releases.map(renderRelease).join('');
+
+            } catch (error) {
+                console.error('Runtime Error:', error);
+                container.innerHTML = renderError(error);
+            } finally {
+                document.querySelector('.loader')?.remove();
+            }
+        });
+    </script>
+</body>
+</html>
