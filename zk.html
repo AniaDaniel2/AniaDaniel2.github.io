@@ -159,4 +159,179 @@
             100% { background-position: 0% 50%; }
         }
         
-        @media (max-width:
+        @media (max-width: 480px) {
+            .glass-container {
+                padding: 1.2rem 1.0rem;
+                border-radius: 16px;
+                margin: 0.8rem;
+                width: calc(100% - 1.6rem);
+            }
+            .countdown {
+                gap: 0.6rem;
+                padding: 0.3rem;
+            }
+            .time-block {
+                min-width: 4rem;
+                padding: 0.3rem;
+            }
+            .number {
+                font-size: clamp(1.8rem, 10vw, 3.2rem);
+            }
+            .label {
+                font-size: clamp(0.75rem, 4vw, 0.85rem);
+            }
+            .info-bar {
+                font-size: 0.70em;
+                padding: 7px 14px;
+                bottom: 12px;
+                gap: 0.8rem;
+            }
+            footer {
+                bottom: 50px;
+                gap: 0.8rem;
+                font-size: 0.72em;
+            }
+            .home-button {
+                right: 15px;
+                top: 15px;
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+            }
+            .home-icon {
+                width: 20px;
+                height: 20px;
+            }
+        }
+        
+        @media (max-width: 340px) {
+            .glass-container {
+                padding: 1.0rem;
+                margin: 0.5rem;
+                width: calc(100% - 1.0rem);
+            }
+            .countdown {
+                gap: 0.5rem;
+            }
+            .time-block {
+                min-width: 3.5rem;
+                padding: 0.2rem;
+            }
+            .number {
+                font-size: clamp(1.6rem, 10vw, 2.8rem);
+            }
+            .label {
+                font-size: clamp(0.7rem, 4vw, 0.8rem);
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="home-button">
+        <svg class="home-icon" viewBox="0 0 24 24">
+            <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2zm-1 9h2v6h-2z"/>
+        </svg>
+    </a>
+
+    <div class="glass-container">
+        <div class="countdown">
+            <div class="time-block">
+                <div class="number" id="days">00</div>
+                <div class="label">天</div>
+            </div>
+            <div class="time-block">
+                <div class="number" id="hours">00</div>
+                <div class="label">小时</div>
+            </div>
+            <div class="time-block">
+                <div class="number" id="minutes">00</div>
+                <div class="label">分钟</div>
+            </div>
+            <div class="time-block">
+                <div class="number" id="seconds">00</div>
+                <div class="label">秒</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-bar" id="ipInfo">
+        <span>IP：加载中...</span>
+        <span>位置：获取中...</span>
+    </div>
+
+    <footer>
+        <a href="https://github.com/AniaDaniel2" target="_blank">AniaDaniel2 2024-2026</a>
+    </footer>
+
+    <script>
+        let examDate = null;
+        let timerInterval = null;
+
+        // 从 pz.json 加载目标时间
+        async function loadTargetDate() {
+            try {
+                const response = await fetch('pz.json');
+                const config = await response.json();
+                examDate = new Date(config.targetDate).getTime();
+            } catch (error) {
+                console.error('加载 pz.json 失败，使用默认时间:', error);
+                // 后备默认时间
+                examDate = new Date('2026-02-17T00:00:00').getTime();
+            }
+            startCountdown();
+        }
+
+        function startCountdown() {
+            function updateTimer() {
+                const now = Date.now();
+                const distance = examDate - now;
+
+                if (distance < 0) {
+                    document.querySelectorAll('.number').forEach(el => {
+                        el.style.color = '#FF4D4D';
+                        el.style.textShadow = '0 0 12px rgba(255,0,110,0.8)';
+                    });
+                    clearInterval(timerInterval);
+                    return;
+                }
+
+                const days = Math.floor(distance / 86400000);
+                const hours = Math.floor((distance % 86400000) / 3600000);
+                const minutes = Math.floor((distance % 3600000) / 60000);
+                const seconds = Math.floor((distance % 60000) / 1000);
+
+                document.getElementById('days').textContent = days.toString().padStart(2, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            }
+
+            timerInterval = setInterval(updateTimer, 1000);
+            updateTimer();
+        }
+
+        async function fetchIPInfo() {
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                const location = [data.city, data.region, data.country_name]
+                    .filter(x => x).join(' · ') || '未知地区';
+                
+                document.getElementById('ipInfo').innerHTML = `
+                    <span>IP：${data.ip}</span>
+                    <span>位置：${location}</span>
+                `;
+            } catch (e) {
+                document.getElementById('ipInfo').innerHTML = `
+                    <span>IP：获取失败</span>
+                    <span>位置：网络异常</span>
+                `;
+            }
+        }
+
+        // 页面加载后执行
+        fetchIPInfo();
+        loadTargetDate();
+    </script>
+</body>
+</html>
