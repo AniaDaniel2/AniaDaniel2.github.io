@@ -36,12 +36,10 @@
             padding-top: 80px;
         }
 
-        /* 移除噪点效果 */
         .noise::before {
             display: none;
         }
 
-        /* 修复导航栏垂直对齐 */
         .navbar {
             position: fixed;
             top: 0;
@@ -72,9 +70,8 @@
             height: 100%;
         }
 
-        /* 修复：移除第一个链接的特殊颜色 */
         .nav-links a {
-            color: var(--text-color); /* 统一颜色 */
+            color: var(--text-color); 
             text-decoration: none;
             font-weight: 500;
             font-size: 1.1rem;
@@ -88,9 +85,8 @@
             height: 100%;
         }
 
-        /* 移除旧的首个链接特殊样式 */
         .nav-links a:first-child {
-            color: var(--text-color); /* 与其他链接相同 */
+            color: var(--text-color); 
         }
 
         .nav-links a::after {
@@ -112,14 +108,12 @@
             width: 100%;
         }
 
-        /* 主要内容区域 */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
 
-        /* 英雄区域样式 */
         .hero {
             text-align: center;
             padding: 3rem 1rem;
@@ -152,7 +146,6 @@
             color: var(--text-color);
         }
 
-        /* 项目卡片区域 */
         .section-title {
             text-align: center;
             font-size: 2.0rem;
@@ -240,7 +233,6 @@
             color: var(--accent-purple);
         }
 
-        /* 项目卡片颜色适配 */
         .project-card::before {
             content: '';
             position: absolute;
@@ -267,7 +259,6 @@
             background: var(--accent-teal);
         }
 
-        /* 页脚样式 */
         footer {
             margin-top: 6rem;
             padding: 3rem 0 2rem;
@@ -291,7 +282,6 @@
             flex-wrap: wrap;
         }
 
-        /* 错误信息样式 */
         .error-message {
             background: rgba(255, 107, 107, 0.1);
             border: 1px solid var(--accent-red);
@@ -332,7 +322,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 响应式设计 */
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.2rem;
@@ -403,7 +392,7 @@
     <nav class="navbar">
         <div class="nav-links">
             <a href="https://github.com/AniaDaniel2">我的项目</a>
-            <a href="zk.html">暑假倒计时</a>
+            <a href="zk.html">倒计时（等待重构）</a>
             <a href="gxrz.html">更新日志</a>
         </div>
     </nav>
@@ -418,17 +407,13 @@
 
         <h2 class="section-title">我的项目</h2>
         
-        <!-- 已删除示例项目卡片 -->
         <section class="projects" id="projects-container">
-            <!-- 项目将从 xm.json 动态加载 -->
         </section>
 
         <footer>
             <div class="footer-content">
                 <div class="copyright">
-                    <span>© 2024-2026 AniaDaniel2</span> | 
-                    <span>DeepSeek 技术支持</span> | 
-                    <span>保留所有权利</span>
+                    <span>© 2024-2026 AniaDaniel2</span> 
                 </div>
             </div>
         </footer>
@@ -451,7 +436,7 @@
             fetch('xm.json')
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('xm.json文件不存在或无法访问');
+                        throw new Error('项目文件不存在，请联系网站管理员');
                     }
                     return response.json();
                 })
@@ -462,11 +447,10 @@
         function loadProjects(data) {
             const container = document.getElementById('projects-container');
             
-            // 清空容器
             container.innerHTML = '';
             
             if (!data || !data.projects || !Array.isArray(data.projects)) {
-                throw new Error('xm.json格式不正确');
+                throw new Error('项目格式不正确，请联系网站管理员');
             }
             
             data.projects.forEach(project => {
@@ -511,7 +495,7 @@
                 <div class="error-message">
                     <h3>加载项目数据失败</h3>
                     <p>错误原因: ${error.message}</p>
-                    <p>请确保同目录下存在xm.json文件</p>
+                    <p>请确保同目录下存在项目文件</p>
                     <p>文件格式应包含有效的项目数组</p>
                     <button class="retry-button" onclick="fetchProjectData()">
                         <i class="fas fa-sync-alt"></i> 重新尝试
