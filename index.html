@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
     <title>AniaDaniel2 | 个人主页</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -17,7 +18,39 @@
             --glass-bg: rgba(255, 255, 255, 0.9);
             --glass-border: rgba(0, 0, 0, 0.07);
             --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
-            --transition: all 0.3s ease;
+            --page-bg: #ffffff;
+            --navbar-bg: rgba(255, 255, 255, 0.85);
+            --navbar-scrolled-bg: rgba(255, 255, 255, 0.92);
+            --navbar-border: rgba(0, 0, 0, 0.05);
+            --navbar-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            --text-secondary: rgba(33, 37, 41, 0.85);
+            --text-muted: rgba(33, 37, 41, 0.6);
+            --card-hover-border: rgba(26, 115, 232, 0.2);
+            --card-hover-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary-color: #1a1a2e;
+                --secondary-color: #16213e;
+                --accent-red: #ff6b6b;
+                --accent-blue: #64b5f6;
+                --accent-purple: #b39ddb;
+                --accent-teal: #4db6ac;
+                --text-color: #e8eaed;
+                --glass-bg: rgba(22, 25, 40, 0.88);
+                --glass-border: rgba(255, 255, 255, 0.07);
+                --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+                --page-bg: #0b0d17;
+                --navbar-bg: rgba(11, 13, 27, 0.82);
+                --navbar-scrolled-bg: rgba(11, 14, 28, 0.88);
+                --navbar-border: rgba(255, 255, 255, 0.04);
+                --navbar-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+                --text-secondary: rgba(226, 228, 235, 0.82);
+                --text-muted: rgba(200, 204, 220, 0.55);
+                --card-hover-border: rgba(84, 167, 244, 0.24);
+                --card-hover-shadow: 0 14px 36px rgba(0, 0, 0, 0.48);
+            }
         }
 
         * {
@@ -28,12 +61,13 @@
         }
 
         body {
-            background: #ffffff;
+            background: var(--page-bg);
             color: var(--text-color);
             min-height: 100vh;
             line-height: 1.6;
             overflow-x: hidden;
             padding-top: 80px;
+            transition: background-color 0.35s ease, color 0.35s ease;
         }
 
         .noise::before {
@@ -46,20 +80,22 @@
             left: 0;
             width: 100%;
             padding: 1.2rem 2rem;
-            backdrop-filter: blur(12px) saturate(180%);
-            -webkit-backdrop-filter: blur(12px) saturate(180%);
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(20px) saturate(200%);
+            -webkit-backdrop-filter: blur(20px) saturate(200%);
+            background: var(--navbar-bg);
+            box-shadow: var(--navbar-shadow);
+            border-bottom: 1px solid var(--navbar-border);
             z-index: 10000;
-            transition: var(--transition);
+            transition: background-color 0.35s ease, backdrop-filter 0.35s ease, -webkit-backdrop-filter 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, padding 0.3s ease;
             display: flex;
             justify-content: center;
         }
 
         .navbar.scrolled {
             padding: 0.8rem 2rem;
-            background: rgba(255, 255, 255, 0.98);
+            background: var(--navbar-scrolled-bg);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
         }
 
         .nav-links {
@@ -71,13 +107,13 @@
         }
 
         .nav-links a {
-            color: var(--text-color); 
+            color: var(--text-color);
             text-decoration: none;
             font-weight: 500;
             font-size: 1.1rem;
             position: relative;
             padding: 0.5rem 0;
-            transition: var(--transition);
+            transition: color 0.3s ease;
             min-width: 120px;
             display: inline-flex;
             align-items: center;
@@ -86,7 +122,7 @@
         }
 
         .nav-links a:first-child {
-            color: var(--text-color); 
+            color: var(--text-color);
         }
 
         .nav-links a::after {
@@ -97,7 +133,7 @@
             width: 0;
             height: 2px;
             background: var(--accent-blue);
-            transition: var(--transition);
+            transition: width 0.3s ease;
         }
 
         .nav-links a:hover {
@@ -136,6 +172,7 @@
             background: linear-gradient(45deg, var(--accent-blue), var(--accent-purple)) border-box;
             padding: 4px;
             box-shadow: var(--glass-shadow);
+            transition: box-shadow 0.35s ease;
         }
 
         .hero h1 {
@@ -144,6 +181,7 @@
             margin-bottom: 1rem;
             letter-spacing: -0.5px;
             color: var(--text-color);
+            transition: color 0.35s ease;
         }
 
         .section-title {
@@ -155,6 +193,7 @@
             display: inline-block;
             left: 50%;
             transform: translateX(-50%);
+            transition: color 0.35s ease;
         }
 
         .section-title::after {
@@ -167,6 +206,7 @@
             height: 4px;
             background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
             border-radius: 4px;
+            transition: background 0.35s ease;
         }
 
         .projects {
@@ -186,24 +226,26 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             box-shadow: var(--glass-shadow);
-            transition: var(--transition);
+            transition: background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, transform 0.3s ease;
         }
 
         .project-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
-            border-color: rgba(26, 115, 232, 0.2);
+            box-shadow: var(--card-hover-shadow);
+            border-color: var(--card-hover-border);
         }
 
         .project-card h3 {
             font-size: 1.5rem;
             margin-bottom: 1.2rem;
+            transition: color 0.35s ease;
         }
 
         .project-description {
             line-height: 1.8;
             margin-top: 1.2rem;
-            color: rgba(33, 37, 41, 0.85);
+            color: var(--text-secondary);
+            transition: color 0.35s ease;
         }
 
         .project-description p {
@@ -217,6 +259,7 @@
             color: var(--accent-blue);
             margin-right: 10px;
             font-size: 1.2rem;
+            transition: color 0.35s ease;
         }
 
         .project-link {
@@ -225,7 +268,7 @@
             color: var(--accent-blue);
             text-decoration: none;
             font-weight: 500;
-            transition: var(--transition);
+            transition: color 0.3s ease;
             cursor: pointer;
         }
 
@@ -264,6 +307,7 @@
             padding: 3rem 0 2rem;
             text-align: center;
             border-top: 1px solid var(--glass-border);
+            transition: border-color 0.35s ease;
         }
 
         .footer-content {
@@ -272,7 +316,7 @@
         }
 
         .copyright {
-            color: rgba(33, 37, 41, 0.6);
+            color: var(--text-muted);
             font-size: 0.95rem;
             margin-top: 1.5rem;
             display: flex;
@@ -280,6 +324,7 @@
             align-items: center;
             gap: 10px;
             flex-wrap: wrap;
+            transition: color 0.35s ease;
         }
 
         .error-message {
@@ -290,15 +335,19 @@
             text-align: center;
             margin-top: 2rem;
             animation: fadeIn 0.5s ease;
+            transition: background-color 0.35s ease, border-color 0.35s ease;
         }
 
         .error-message h3 {
             color: var(--accent-red);
             margin-bottom: 1rem;
+            transition: color 0.35s ease;
         }
 
         .error-message p {
             margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            transition: color 0.35s ease;
         }
 
         .retry-button {
@@ -309,7 +358,7 @@
             padding: 0.5rem 1.5rem;
             margin-top: 1rem;
             cursor: pointer;
-            transition: var(--transition);
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
         .retry-button:hover {
@@ -329,6 +378,13 @@
             
             .navbar {
                 padding: 1rem;
+                backdrop-filter: blur(18px) saturate(200%);
+                -webkit-backdrop-filter: blur(18px) saturate(200%);
+            }
+            
+            .navbar.scrolled {
+                backdrop-filter: blur(22px) saturate(200%);
+                -webkit-backdrop-filter: blur(22px) saturate(200%);
             }
             
             .nav-links {
