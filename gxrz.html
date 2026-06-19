@@ -439,10 +439,11 @@
         };
 
         const renderRelease = release => {
+            // ★★★ 修复点：先替换 ## 再替换 ### ★★★
             const bodyContent = release.body 
                 ? release.body
-                    .replace(/^### (.*)/gm, '<h3>$1</h3>')
-                    .replace(/^## (.*)/gm, '<h2>$1</h2>')
+                    .replace(/^## (.*)/gm, '<h2>$1</h2>')      // 先处理二级标题
+                    .replace(/^### (.*)/gm, '<h3>$1</h3>')     // 再处理三级标题
                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                     .replace(/\n/g, '<br>')
                 : '<p>暂无更新说明</p>';
