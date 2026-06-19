@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+    <title>倒计时</title>
+    <style>
+        :root {
+            --text-color: rgba(255, 255, 255, 0.95);
+            --glass-bg: rgba(0, 0, 0, 0.4);
+            --accent-color: #4a9eff;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0b0f1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.2s ease-out;
+        }
+        
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 2.5px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        body {
+            min-height: 100vh;
+            margin: 0;
+            background: 
+                linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.3)),
+                url('https://bing.com/th?id=OHR.SunriseBison_ZH-CN8779106227_1920x1080.jpg&rf=LaDigue_1920x1080.jpg')
+                center/cover no-repeat fixed #0b0f1a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+        
+        .home-button {
+            position: fixed;
+            right: 16px;
+            top: 16px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 100;
+        }
+        
+        .home-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+        }
+        
+        .home-icon {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-color);
+        }
+        
+        .glass-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 20px;
+            padding: 1.8rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            width: min(680px, calc(100% - 24px));
+            margin: 0 auto;
+        }
+        
+        .countdown {
+            display: flex;
+            gap: 1rem;
+            justify-content: space-around;
+            text-align: center;
+        }
+        
+        .time-block {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .number {
+            font-size: clamp(2.2rem, 8vw, 3.6rem);
+            font-weight: 800;
+            color: var(--text-color);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            line-height: 1;
+            margin-bottom: 0.3rem;
+        }
+        
+        .label {
+            font-size: clamp(0.8rem, 3vw, 0.95rem);
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+        
+        .info-bar {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 8px 16px;
+            color: var(--text-color);
+            font-size: 0.75rem;
+            display: flex;
+            gap: 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            white-space: nowrap;
+        }
+        
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+        
+        footer {
+            position: fixed;
+            bottom: 60px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: var(--text-color);
+            font-size: 0.8rem;
+        }
+        
+        footer a {
+            color: var(--text-color);
+            opacity: 0.9;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        @media (max-width: 600px) {
+            .glass-container {
+                padding: 1.5rem 1.2rem;
+                border-radius: 18px;
+            }
+            
+            .countdown {
+                gap: 0.8rem;
+            }
+            
+            .info-bar {
+                font-size: 0.7rem;
+                gap: 1rem;
+                padding: 7px 14px;
+            }
+            
+            .home-button {
+                width: 36px;
+                height: 36px;
+                right: 12px;
+                top: 12px;
+            }
+            
+            .home-icon {
+                width: 18px;
+                height: 18px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .glass-container {
+                padding: 1.2rem 1rem;
+            }
+            
+            .countdown {
+                gap: 0.6rem;
+            }
+            
+            .number {
+                font-size: clamp(1.8rem, 9vw, 2.8rem);
+            }
+            
+            .label {
+                font-size: 0.75rem;
+            }
+            
+            .info-bar {
+                font-size: 0.65rem;
+                gap: 0.8rem;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+    
+    <a href="index.html" class="home-button">
+        <svg class="home-icon" viewBox="0 0 24 24">
+            <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2zm-1 9h2v6h-2z"/>
+        </svg>
+    </a>
+
+    <div class="glass-container">
+        <div class="countdown" id="countdownContainer">
+            <div class="time-block">
+                <div class="number" id="days">00</div>
+                <div class="label">天</div>
+            </div>
+            <div class="time-block">
+                <div class="number" id="hours">00</div>
+                <div class="label">小时</div>
+            </div>
+            <div class="time-block">
+                <div class="number" id="minutes">00</div>
+                <div class="label">分钟</div>
+            </div>
+            <div class="time-block">
+                <div class="number" id="seconds">00</div>
+                <div class="label">秒</div>
+            </div>
+        </div>
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+    </div>
+
+    <div class="info-bar" id="ipInfo">
+        <span>IP：加载中</span>
+        <span>位置：获取中</span>
+    </div>
+
+    <footer>
+        <a href="https://github.com/AniaDaniel2" target="_blank">AniaDaniel2 2024-2026</a>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const maxLoadTime = 2000;
+            
+            const timeoutId = setTimeout(() => {
+                loadingOverlay.classList.add('hidden');
+            }, maxLoadTime);
+            
+            try {
+                await Promise.race([
+                    Promise.all([loadTargetDate(), fetchIPInfo()]),
+                    new Promise(resolve => setTimeout(resolve, 1200))
+                ]);
+                
+                clearTimeout(timeoutId);
+                loadingOverlay.classList.add('hidden');
+                
+            } catch (error) {
+                clearTimeout(timeoutId);
+                loadingOverlay.classList.add('hidden');
+            }
+        });
+
+        let examDate = null;
+        let timerInterval = null;
+
+        async function loadTargetDate() {
+            try {
+                const response = await fetch('pz.json');
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const config = await response.json();
+                
+                if (!config.targetDate) {
+                    throw new Error('配置文件中缺少targetDate字段');
+                }
+                
+                examDate = new Date(config.targetDate).getTime();
+                
+                if (isNaN(examDate)) {
+                    throw new Error('targetDate格式无效');
+                }
+                
+                startCountdown();
+                document.getElementById('errorMessage').style.display = 'none';
+                
+            } catch (error) {
+                console.error('配置文件加载失败:', error);
+                
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                
+                document.getElementById('errorMessage').textContent = 
+                    `配置文件加载失败: ${error.message || '请检查pz.json文件'}`;
+                document.getElementById('errorMessage').style.display = 'block';
+                
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+            }
+        }
+
+        function startCountdown() {
+            function updateTimer() {
+                if (!examDate) return;
+                
+                const now = Date.now();
+                const distance = examDate - now;
+                
+                if (distance < 0) {
+                    document.getElementById('days').textContent = '00';
+                    document.getElementById('hours').textContent = '00';
+                    document.getElementById('minutes').textContent = '00';
+                    document.getElementById('seconds').textContent = '00';
+                    
+                    clearInterval(timerInterval);
+                    return;
+                }
+                
+                const days = Math.floor(distance / 86400000);
+                const hours = Math.floor((distance % 86400000) / 3600000);
+                const minutes = Math.floor((distance % 3600000) / 60000);
+                const seconds = Math.floor((distance % 60000) / 1000);
+                
+                document.getElementById('days').textContent = days.toString().padStart(2, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            }
+            
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            
+            timerInterval = setInterval(updateTimer, 1000);
+            updateTimer();
+        }
+
+        async function fetchIPInfo() {
+            const apis = [
+                'https://api.ipify.org?format=json',
+                'https://ipinfo.io/json'
+            ];
+            
+            for (const apiUrl of apis) {
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 1500);
+                    
+                    const res = await fetch(apiUrl, { 
+                        signal: controller.signal 
+                    });
+                    clearTimeout(timeoutId);
+                    
+                    if (!res.ok) continue;
+                    
+                    const data = await res.json();
+                    const ip = data.ip || '未知';
+                    
+                    let location = '未知地区';
+                    if (apiUrl.includes('ipinfo.io') && data.city && data.region && data.country) {
+                        location = `${data.city} · ${data.region} · ${data.country}`;
+                    } else if (data.country_name) {
+                        location = data.country_name;
+                    } else {
+                        location = '未知';
+                    }
+                    
+                    document.getElementById('ipInfo').innerHTML = `
+                        <span>IP：${ip}</span>
+                        <span>位置：${location}</span>
+                    `;
+                    return;
+                    
+                } catch (e) {
+                    continue;
+                }
+            }
+            
+            document.getElementById('ipInfo').innerHTML = `
+                <span>IP：未知</span>
+                <span>位置：未知</span>
+            `;
+        }
+    </script>
+</body>
+</html>

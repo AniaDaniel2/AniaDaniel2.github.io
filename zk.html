@@ -17,43 +17,55 @@
             --glass-bg: rgba(0, 0, 0, 0.35);
         }
 
-        .home-button {
+        /* ---- 导航按钮组（右上角） ---- */
+        .nav-buttons {
             position: fixed;
             right: 20px;
             top: 20px;
             z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-button {
             width: 44px;
             height: 44px;
             border-radius: 12px;
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+            color: var(--text-color);
         }
 
-        .home-button:hover {
+        .nav-button:hover {
             transform: translateY(-2px);
             background: rgba(255, 255, 255, 0.25);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
         }
 
-        .home-button:active {
+        .nav-button:active {
             transform: translateY(1px);
         }
 
-        .home-icon {
+        .nav-icon {
             width: 22px;
             height: 22px;
-            fill: var(--text-color);
+            fill: currentColor;
             filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.2));
         }
 
-        html { font-size: calc(14px + 0.2vw); }
-        * { 
+        /* ---- 原有全局样式 ---- */
+        html {
+            font-size: calc(14px + 0.2vw);
+        }
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -61,14 +73,14 @@
         }
         body {
             min-height: 100vh;
-            background: linear-gradient(45deg, 
-                var(--color1),
-                var(--color2),
-                var(--color3),
-                var(--color4),
-                var(--color5),
-                var(--color6),
-                var(--color7));
+            background: linear-gradient(45deg,
+                    var(--color1),
+                    var(--color2),
+                    var(--color3),
+                    var(--color4),
+                    var(--color5),
+                    var(--color6),
+                    var(--color7));
             background-size: 600% 600%;
             animation: gradientFlow 20s ease infinite;
             display: flex;
@@ -77,7 +89,7 @@
             align-items: center;
             font-family: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
             position: relative;
-            padding: 10px; 
+            padding: 10px;
         }
         .glass-container {
             background: var(--glass-bg);
@@ -93,7 +105,7 @@
         }
         .countdown {
             display: flex;
-            gap: 0.8rem; 
+            gap: 0.8rem;
             text-align: center;
             justify-content: space-around;
             flex-wrap: wrap;
@@ -103,18 +115,18 @@
             color: var(--text-color);
             text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.35);
             flex: 1;
-            min-width: 4.5rem; 
+            min-width: 4.5rem;
             padding: 0.4rem;
         }
         .number {
-            font-size: clamp(2.0rem, 9vw, 3.8rem); 
+            font-size: clamp(2.0rem, 9vw, 3.8rem);
             font-weight: 700;
             margin-bottom: 0.2rem;
             line-height: 1.1;
-            letter-spacing: -1px; 
+            letter-spacing: -1px;
         }
         .label {
-            font-size: clamp(0.8rem, 3.6vw, 0.95rem); 
+            font-size: clamp(0.8rem, 3.6vw, 0.95rem);
             white-space: nowrap;
         }
         .loading-text {
@@ -160,12 +172,33 @@
             white-space: nowrap;
         }
         @keyframes gradientFlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
-        
+
+        /* ---- 响应式 ---- */
         @media (max-width: 480px) {
+            .nav-buttons {
+                right: 15px;
+                top: 15px;
+                gap: 8px;
+            }
+            .nav-button {
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+            }
+            .nav-icon {
+                width: 20px;
+                height: 20px;
+            }
             .glass-container {
                 padding: 1.2rem 1.0rem;
                 border-radius: 16px;
@@ -197,20 +230,18 @@
                 gap: 0.8rem;
                 font-size: 0.72em;
             }
-            .home-button {
-                right: 15px;
-                top: 15px;
-                width: 40px;
-                height: 40px;
-                border-radius: 10px;
-            }
-            .home-icon {
-                width: 20px;
-                height: 20px;
-            }
         }
-        
+
         @media (max-width: 340px) {
+            .nav-button {
+                width: 36px;
+                height: 36px;
+                border-radius: 9px;
+            }
+            .nav-icon {
+                width: 18px;
+                height: 18px;
+            }
             .glass-container {
                 padding: 1.0rem;
                 margin: 0.5rem;
@@ -233,16 +264,26 @@
     </style>
 </head>
 <body>
-    <a href="index.html" class="home-button">
-        <svg class="home-icon" viewBox="0 0 24 24">
-            <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2zm-1 9h2v6h-2z"/>
-        </svg>
-    </a>
 
+    <div class="nav-buttons">
+        <!-- b 按钮 → djs.html -->
+        <a href="djs.html" class="nav-button" title="跳转到 djs 页面">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <text x="12" y="18" text-anchor="middle" font-size="16" font-weight="bold"
+                fill="currentColor" font-family="system-ui, sans-serif">b</text>
+            </svg>
+        </a>
+        <a href="index.html" class="nav-button" title="返回首页">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2zm-1 9h2v6h-2z"/>
+            </svg>
+        </a>
+    </div>
+
+    <!-- ====== 倒计时主体 ====== -->
     <div class="glass-container">
-        <!-- 倒计时区域：初始显示加载提示，JS加载完成后替换为实际倒计时 -->
         <div class="countdown" id="countdownContainer">
-            <div class="loading-text">⏳ 加载倒计时配置...</div>
+            <div class="loading-text">加载倒计时配置...</div>
         </div>
     </div>
 
@@ -258,9 +299,8 @@
     <script>
         let examDate = null;
         let timerInterval = null;
-        const DEFAULT_TARGET = '2027-01-01T00:00:00'; // 默认目标时间（备用）
+        const DEFAULT_TARGET = '2027-01-01T00:00:00';
 
-        // 从 pz.json 加载目标时间
         async function loadTargetDate() {
             try {
                 const response = await fetch('pz.json');
@@ -271,12 +311,10 @@
                 console.warn('无法加载时间，使用默认时间:', error);
                 examDate = new Date(DEFAULT_TARGET).getTime();
             }
-            // 构建倒计时 UI 并启动
             buildCountdownUI();
             startCountdown();
         }
 
-        // 动态创建倒计时的时间块
         function buildCountdownUI() {
             const container = document.getElementById('countdownContainer');
             container.innerHTML = `
@@ -325,7 +363,7 @@
             }
 
             timerInterval = setInterval(updateTimer, 1000);
-            updateTimer(); // 立即执行一次
+            updateTimer();
         }
 
         async function fetchIPInfo() {
@@ -334,7 +372,7 @@
                 const data = await res.json();
                 const location = [data.city, data.region, data.country_name]
                     .filter(x => x).join(' · ') || '未知地区';
-                
+
                 document.getElementById('ipInfo').innerHTML = `
                     <span>IP：${data.ip}</span>
                     <span>位置：${location}</span>
@@ -347,7 +385,6 @@
             }
         }
 
-        // 页面加载后执行
         fetchIPInfo();
         loadTargetDate();
     </script>
