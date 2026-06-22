@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0" />
+    <title>倒计时 · 视频背景</title>
+    <style>
+        /* ===== 全局变量 ===== */
+        :root {
+            --text-color: rgba(255, 255, 255, 0.98);
+            --glass-bg: rgba(0, 0, 0, 0.42);
+            --fallback-bg: #1a1a2e;
+        }
+
+        /* ===== 视频背景 ===== */
+        #bgVideo {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            min-width: 100vw;
+            min-height: 100vh;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            z-index: -2;
+            object-fit: cover;
+            background: var(--fallback-bg);
+        }
+
+        /* 半透明遮罩，提升文字可读性 */
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ===== 导航按钮（右上角） ===== */
+        .nav-buttons {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+        .nav-button {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+            color: var(--text-color);
+        }
+        .nav-button:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+        }
+        .nav-button:active {
+            transform: translateY(1px);
+        }
+        .nav-icon {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+            filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.2));
+        }
+
+        /* ===== 主体布局 ===== */
+        html {
+            font-size: calc(14px + 0.2vw);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            padding: 10px;
+        }
+
+        /* ===== 毛玻璃倒计时容器 ===== */
+        .glass-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border-radius: 18px;
+            padding: 1.5rem;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            margin: 1rem;
+            width: calc(100% - 2rem);
+            max-width: 680px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .countdown {
+            display: flex;
+            gap: 0.8rem;
+            text-align: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding: 0.5rem;
+        }
+        .time-block {
+            color: var(--text-color);
+            text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.35);
+            flex: 1;
+            min-width: 4.5rem;
+            padding: 0.4rem;
+        }
+        .number {
+            font-size: clamp(2.0rem, 9vw, 3.8rem);
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+            line-height: 1.1;
+            letter-spacing: -1px;
+        }
+        .label {
+            font-size: clamp(0.8rem, 3.6vw, 0.95rem);
+            white-space: nowrap;
+        }
+        .loading-text {
+            color: var(--text-color);
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* ===== 底部信息栏 ===== */
+        .info-bar {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 8px 16px;
+            color: var(--text-color);
+            font-size: 0.74em;
+            display: flex;
+            gap: 1.0rem;
+            max-width: 96%;
+            overflow-x: auto;
+            white-space: nowrap;
+            z-index: 2;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+        }
+
+        /* ===== Footer ===== */
+        footer {
+            position: fixed;
+            bottom: 60px;
+            width: 100%;
+            text-align: center;
+            color: var(--text-color);
+            padding: 0 10px;
+            font-size: 0.75em;
+            display: flex;
+            justify-content: center;
+            gap: 1.0rem;
+            flex-wrap: wrap;
+            z-index: 2;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+        }
+        footer a {
+            color: var(--text-color);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            white-space: nowrap;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 480px) {
+            .nav-buttons {
+                right: 15px;
+                top: 15px;
+                gap: 8px;
+            }
+            .nav-button {
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+            }
+            .nav-icon {
+                width: 20px;
+                height: 20px;
+            }
+            .glass-container {
+                padding: 1.2rem 1.0rem;
+                border-radius: 16px;
+                margin: 0.8rem;
+                width: calc(100% - 1.6rem);
+            }
+            .countdown {
+                gap: 0.6rem;
+                padding: 0.3rem;
+            }
+            .time-block {
+                min-width: 4rem;
+                padding: 0.3rem;
+            }
+            .number {
+                font-size: clamp(1.8rem, 10vw, 3.2rem);
+            }
+            .label {
+                font-size: clamp(0.75rem, 4vw, 0.85rem);
+            }
+            .info-bar {
+                font-size: 0.70em;
+                padding: 7px 14px;
+                bottom: 12px;
+                gap: 0.8rem;
+            }
+            footer {
+                bottom: 50px;
+                gap: 0.8rem;
+                font-size: 0.72em;
+            }
+        }
+
+        @media (max-width: 340px) {
+            .nav-button {
+                width: 36px;
+                height: 36px;
+                border-radius: 9px;
+            }
+            .nav-icon {
+                width: 18px;
+                height: 18px;
+            }
+            .glass-container {
+                padding: 1.0rem;
+                margin: 0.5rem;
+                width: calc(100% - 1.0rem);
+            }
+            .countdown {
+                gap: 0.5rem;
+            }
+            .time-block {
+                min-width: 3.5rem;
+                padding: 0.2rem;
+            }
+            .number {
+                font-size: clamp(1.6rem, 10vw, 2.8rem);
+            }
+            .label {
+                font-size: clamp(0.7rem, 4vw, 0.8rem);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 视频背景（直链已硬编码） ===== -->
+    <video id="bgVideo" autoplay loop muted playsinline
+        poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' fill='%231a1a2e'/%3E%3C/svg%3E">
+        <source src="https://txmov2.a.kwimgs.com/upic/2026/06/09/01/BMjAyNjA2MDkwMTI4MjlfMzQzOTQzOTQ4NV8xOTgzMjE2ODg3NDBfMl8z_b_Be0bb00839dd206e733e2651e190815a0.mp4?tag=1-1782141529-std-1-bcswxvpnqs-e3b229bcdd2e1643&clientCacheKey=3x37qq8yyhnsi4k_b.mp4" type="video/mp4" />
+    </video>
+    <div class="video-overlay"></div>
+
+    <!-- ===== 导航按钮 ===== -->
+    <div class="nav-buttons">
+        <a href="djs.html" class="nav-button" title="跳转到 djs 页面">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <text x="12" y="18" text-anchor="middle" font-size="16" font-weight="bold"
+                    fill="currentColor" font-family="system-ui, sans-serif">b</text>
+            </svg>
+        </a>
+        <a href="index.html" class="nav-button" title="返回首页">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2zm-1 9h2v6h-2z"/>
+            </svg>
+        </a>
+    </div>
+
+    <!-- ===== 倒计时主体 ===== -->
+    <div class="glass-container">
+        <div class="countdown" id="countdownContainer">
+            <div class="loading-text">⏳ 加载倒计时配置…</div>
+        </div>
+    </div>
+
+    <!-- ===== 底部信息 ===== -->
+    <div class="info-bar" id="ipInfo">
+        <span>IP：加载中…</span>
+        <span>位置：获取中…</span>
+    </div>
+
+    <footer>
+        <a href="https://github.com/AniaDaniel2" target="_blank">AniaDaniel2 2024-2026</a>
+    </footer>
+
+    <!-- ============================================================ -->
+    <script>
+        /* ================================================================
+           1. 倒计时逻辑（从 pz.json 读取目标时间）
+           ================================================================ */
+
+        let examDate = null;
+        let timerInterval = null;
+        const DEFAULT_TARGET = '2027-01-01T00:00:00';
+
+        async function loadTargetDate() {
+            try {
+                const response = await fetch('pz.json');
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const config = await response.json();
+                examDate = new Date(config.targetDate).getTime();
+            } catch (error) {
+                console.warn('无法加载 pz.json，使用默认时间:', error);
+                examDate = new Date(DEFAULT_TARGET).getTime();
+            }
+            buildCountdownUI();
+            startCountdown();
+        }
+
+        function buildCountdownUI() {
+            const container = document.getElementById('countdownContainer');
+            container.innerHTML = `
+                <div class="time-block">
+                    <div class="number" id="days">00</div>
+                    <div class="label">天</div>
+                </div>
+                <div class="time-block">
+                    <div class="number" id="hours">00</div>
+                    <div class="label">小时</div>
+                </div>
+                <div class="time-block">
+                    <div class="number" id="minutes">00</div>
+                    <div class="label">分钟</div>
+                </div>
+                <div class="time-block">
+                    <div class="number" id="seconds">00</div>
+                    <div class="label">秒</div>
+                </div>
+            `;
+        }
+
+        function startCountdown() {
+            function updateTimer() {
+                const now = Date.now();
+                const distance = examDate - now;
+
+                if (distance < 0) {
+                    document.querySelectorAll('.number').forEach(el => {
+                        el.style.color = '#FF4D4D';
+                        el.style.textShadow = '0 0 12px rgba(255,0,110,0.8)';
+                    });
+                    clearInterval(timerInterval);
+                    return;
+                }
+
+                const days = Math.floor(distance / 86400000);
+                const hours = Math.floor((distance % 86400000) / 3600000);
+                const minutes = Math.floor((distance % 3600000) / 60000);
+                const seconds = Math.floor((distance % 60000) / 1000);
+
+                document.getElementById('days').textContent = days.toString().padStart(2, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            }
+
+            timerInterval = setInterval(updateTimer, 1000);
+            updateTimer();
+        }
+
+
+        /* ================================================================
+           2. IP 归属地信息
+           ================================================================ */
+
+        async function fetchIPInfo() {
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                const location = [data.city, data.region, data.country_name]
+                    .filter(x => x).join(' · ') || '未知地区';
+
+                document.getElementById('ipInfo').innerHTML = `
+                    <span>IP：${data.ip}</span>
+                    <span>位置：${location}</span>
+                `;
+            } catch (e) {
+                document.getElementById('ipInfo').innerHTML = `
+                    <span>IP：获取失败</span>
+                    <span>位置：网络异常</span>
+                `;
+            }
+        }
+
+        // ===== 启动所有功能 =====
+        fetchIPInfo();
+        loadTargetDate();
+    </script>
+
+</body>
+</html>
